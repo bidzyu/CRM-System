@@ -1,0 +1,55 @@
+@use './normalize' as *;
+@use './variables' as *;
+@use './modules/CreateTask' as *;
+@use './modules/TasksList' as *;
+
+html {
+  font-size: 110%;
+  font-family: monospace;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient($base-color-8, $base-color-1);
+  color: $base-color-2;
+}
+
+#root {
+  height: 100%;
+}
+
+.page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.module {
+  max-width: 35rem;
+  width: 100%;
+  padding: 1rem 0.5rem;
+}
+
+button {
+  font-size: $btn-fz;
+  padding: $btn-padding;
+  border-radius: $btn-br;
+  background-color: $base-color-1;
+  border: 1px solid $base-color-2;
+  color: $base-color-2;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: $base-color-4;
+    background-color: $base-color-4;
+  }
+}
+
+svg {
+  width: 2rem;
+  height: 1.2rem;
+  fill: $base-color-2;
+}
