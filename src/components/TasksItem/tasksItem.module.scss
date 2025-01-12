@@ -1,0 +1,38 @@
+@use '../../scss/variables' as *;
+
+.item {
+  display: flex;
+  align-items: center;
+  background-color: $base-color-3;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  min-height: 7.5rem;
+  box-shadow: 0 0 2px $base-color-1;
+
+  & > button {
+    & > svg {
+      fill: $base-color-2;
+    }
+
+    &:hover > svg {
+      font-size: 4rem;
+      fill: $base-color-6;
+    }
+
+    &:hover {
+      border: 1px solid $base-color-6;
+    }
+  }
+
+  & > :nth-child(3) {
+    border: 1px solid $base-color-4;
+    background-color: $base-color-4;
+    margin-right: 0.25rem;
+  }
+
+  & > :nth-child(4) {
+    border: 1px solid $base-color-5;
+    background-color: $base-color-5;
+  }
+}

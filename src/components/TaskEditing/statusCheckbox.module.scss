@@ -1,0 +1,52 @@
+@use '../../scss/variables' as *;
+
+.wrapper {
+  position: relative;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 1rem;
+
+  &:hover .checkbox {
+    border: 1px solid $base-color-2;
+  }
+}
+
+.wrapperActive {
+  position: relative;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 1rem;
+
+  &::after {
+    content: '✔';
+    text-align: center;
+    color: $base-color-6;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    line-height: 2rem;
+    font-weight: bold;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  &:hover .checkbox {
+    border: 1px solid $base-color-2;
+  }
+}
+
+.checkbox {
+  width: 100%;
+  height: 100%;
+  background-color: $base-color-4;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid $base-color-4;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+}

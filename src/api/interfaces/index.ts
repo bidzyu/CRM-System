@@ -1,4 +1,8 @@
-import { Status } from '../../modules/TasksList/components/TasksList/TasksList';
+export enum Status {
+  ALL = 'all',
+  COMPLETED = 'completed',
+  INWORK = 'inWork',
+}
 
 export interface MethodParams {
   get: (id: number) => string;

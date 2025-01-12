@@ -1,0 +1,50 @@
+@use '../../scss/variables' as *;
+
+.form {
+  width: 100%;
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  justify-content: space-between;
+}
+
+.inputWrapper {
+  width: 100%;
+  position: relative;
+}
+
+.input {
+  font-size: 1.1rem;
+  width: 100%;
+  padding: $btn-padding;
+  border-bottom: 2px solid $base-color-2;
+  color: $base-color-2;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    border-color: $base-color-4;
+    color: $base-color-2;
+  }
+
+  &::placeholder {
+    color: $base-color-3;
+  }
+}
+
+.validateError {
+  position: absolute;
+  height: 4rem;
+  left: 0.25rem;
+  bottom: -4.5rem;
+}
+
+.button {
+  background-color: $base-color-4;
+  border: 1px solid $base-color-4;
+  width: 10rem;
+
+  &:hover {
+    border-color: $base-color-6;
+  }
+}
