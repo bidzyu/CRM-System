@@ -1,13 +1,14 @@
 import { FormEvent, useRef, useState } from 'react';
 import { TaskForm } from '../';
-import { postData } from '../../api';
-import { validateInput } from '../../helpers/validateInput';
+import { createTodo } from '../../api/todos';
+import { getTodoValidateError } from '../../helpers/getTodoValidateError';
+import { validateTodoInput } from '../../helpers/validateTodoInput';
 
 interface CreateTaskProps {
-  useTrigger: () => void;
+  fetchNewData: () => void;
 }
 
-export const CreateTask: React.FC<CreateTaskProps> = ({ useTrigger }) => {
+export const CreateTask: React.FC<CreateTaskProps> = ({ fetchNewData }) => {
   const ref = useRef<null | HTMLInputElement>(null);
   const timerRef = useRef<number>();
   const [validateError, setValidateError] = useState<string | null>(null);
@@ -19,10 +20,8 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ useTrigger }) => {
 
     const value = ref.current.value.trim();
 
-    const error = validateInput(value);
-
-    if (error !== null) {
-      setValidateError(error);
+    if (!validateTodoInput(value)) {
+      setValidateError(getTodoValidateError(value));
       ref.current.focus();
 
       clearTimeout(timerRef.current);
@@ -37,16 +36,21 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ useTrigger }) => {
       setValidateError(null);
     }
     ref.current.value = '';
-    await postData(value);
-    useTrigger();
+
+    try {
+      await createTodo(value);
+      fetchNewData();
+    } catch (e) {
+      alert('Неудалось создать задачу, попробуйте позже.');
+    }
   };
 
   return (
     <div className="module create-task">
       <TaskForm
-        onSubmit={handleSumbmit}
+        handleSumbmit={handleSumbmit}
         inputRef={ref}
-        message={validateError}
+        validateError={validateError}
       />
     </div>
   );

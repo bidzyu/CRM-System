@@ -2,18 +2,18 @@ import { FormEvent } from 'react';
 import style from './taskForm.module.scss';
 
 interface TaskFormProps {
-  onSubmit: (e: FormEvent) => void;
+  handleSumbmit: (e: FormEvent) => void;
   inputRef: React.RefObject<HTMLInputElement>;
-  message: string | null;
+  validateError: string | null;
 }
 
 export const TaskForm: React.FC<TaskFormProps> = ({
-  onSubmit,
+  handleSumbmit,
   inputRef,
-  message,
+  validateError,
 }) => {
   return (
-    <form className={style.form} action="" onSubmit={onSubmit}>
+    <form className={style.form} action="" onSubmit={handleSumbmit}>
       <div className={style.inputWrapper}>
         <input
           className={style.input}
@@ -21,7 +21,9 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           placeholder="Task To Be Done..."
           ref={inputRef}
         />
-        {message && <div className={style.validateError}>{message}</div>}
+        {validateError && (
+          <div className={style.validateError}>{validateError}</div>
+        )}
       </div>
       <button className={style.button}>Add</button>
     </form>

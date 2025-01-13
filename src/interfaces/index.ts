@@ -1,15 +1,7 @@
-export enum Status {
+export enum TodoFilterStatus {
   ALL = 'all',
   COMPLETED = 'completed',
   INWORK = 'inWork',
-}
-
-export interface MethodParams {
-  get: (id: number) => string;
-  post: () => string;
-  put: (id: number) => string;
-  delete: (id: number) => string;
-  getByStatus: (status: Status) => string;
 }
 
 export interface TodoRequest {

@@ -1,45 +1,44 @@
 import { useEffect, useState } from 'react';
 import { TasksItems, CreateTask, TasksFilter } from '../';
-import { Todo, TodoInfo, Status, getData } from '../../api';
+import { fetchTodos } from '../../api/todos';
+import { TodoFilterStatus, Todo, TodoInfo } from '../../interfaces';
 import style from './todoContainer.module.scss';
 
 const TodoContainer: React.FC = () => {
   const [tasks, setTasks] = useState<Todo[]>([]);
   const [info, setInfo] = useState<TodoInfo>();
-  const [currStatus, setCurrStatus] = useState<Status>(Status.ALL);
-  const [trigger, setTrigger] = useState(false);
-
-  const useTrigger = () => {
-    setTrigger((prev) => !prev);
-  };
-
-  const changeStatus = (status: Status) => {
-    setCurrStatus(status);
-    useTrigger();
-  };
-
-  const fetchNewData = async () => {
-    const data = await getData(currStatus);
-
-    if (!data) return;
-
-    setTasks(data.data.sort((a) => (a.isDone ? -1 : 1)));
-    setInfo(data.info);
-  };
+  const [currStatus, setCurrStatus] = useState<TodoFilterStatus>(
+    TodoFilterStatus.ALL
+  );
 
   useEffect(() => {
     fetchNewData();
-  }, [trigger]);
+  }, [currStatus]);
+
+  const changeStatus = (status: TodoFilterStatus) => {
+    setCurrStatus(status);
+  };
+
+  const fetchNewData = async () => {
+    try {
+      const data = await fetchTodos(currStatus);
+
+      setTasks(data.data.sort((a) => (a.isDone ? -1 : 1)));
+      setInfo(data.info);
+    } catch (e) {
+      alert('Неудалось получить данные, попробуйте позже.');
+    }
+  };
 
   return (
     <div className={style.container}>
-      <CreateTask useTrigger={useTrigger} />
-      <TasksFilter currStatus={currStatus} info={info} onClick={changeStatus} />
-      <TasksItems
-        tasks={tasks}
+      <CreateTask fetchNewData={fetchNewData} />
+      <TasksFilter
+        info={info}
         currStatus={currStatus}
-        useTrigger={useTrigger}
+        changeStatus={changeStatus}
       />
+      <TasksItems tasks={tasks} fetchNewData={fetchNewData} />
     </div>
   );
 };

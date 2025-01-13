@@ -36,3 +36,58 @@
     background-color: $base-color-5;
   }
 }
+
+.titleActive,
+.title {
+  word-break: break-all;
+  overflow: hidden;
+}
+
+.titleActive,
+.title,
+.input {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  overflow: hidden;
+  border: none;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  width: 70%;
+  min-height: 6rem;
+  margin-right: 1rem;
+  position: relative;
+}
+
+.validateError {
+  position: absolute;
+  left: 0;
+  bottom: -4rem;
+  background-color: $base-color-3;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid $base-color-1;
+}
+
+.input {
+  color: $base-color-4;
+  font-weight: bold;
+  font-size: 1.25rem;
+  background-color: $base-color-2;
+  border-radius: 0.25rem;
+  width: 100%;
+  box-shadow: 0 0 2px $base-color-8;
+}
+
+.title {
+  font-weight: bold;
+  color: $base-color-7;
+}
+
+.titleActive {
+  font-weight: bold;
+  text-decoration: line-through;
+  color: $base-color-8;
+}

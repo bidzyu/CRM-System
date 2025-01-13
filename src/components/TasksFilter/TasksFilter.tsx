@@ -1,38 +1,40 @@
-import { TodoInfo, Status } from '../../api';
+import { TodoFilterStatus, TodoInfo } from '../../interfaces';
 import style from './tasksFilter.module.scss';
 
+const translatedStatus: Record<TodoFilterStatus, string> = {
+  [TodoFilterStatus.ALL]: 'Все',
+  [TodoFilterStatus.COMPLETED]: 'Выполненные',
+  [TodoFilterStatus.INWORK]: 'В работе',
+};
 interface TasksFilterProps {
-  onClick: (status: Status) => any;
+  changeStatus: (status: TodoFilterStatus) => any;
   info: TodoInfo | undefined;
-  currStatus: Status;
+  currStatus: TodoFilterStatus;
 }
 
 export const TasksFilter: React.FC<TasksFilterProps> = ({
-  onClick,
+  changeStatus,
   currStatus,
   info,
 }) => {
   return (
     <div className={style.filter}>
-      {Object.entries(Status).map(([key, value]) => {
-        let className = 'button';
+      {Object.entries(TodoFilterStatus).map(([key, status]) => {
         let count = '';
 
-        if (currStatus === value) {
-          className += 'Selected';
-        }
-
         if (info) {
-          count += `(${info[value]})`;
+          count += `(${info[status]})`;
         }
 
         return (
           <button
-            onClick={() => onClick(value)}
-            className={style[className]}
+            onClick={() => changeStatus(status)}
+            className={
+              style[currStatus === status ? 'buttonSelected' : 'button']
+            }
             key={key}
           >
-            {key + count}
+            {`${translatedStatus[status]}${count}`}
           </button>
         );
       })}

@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { StatusCheckbox, EditingBtns, TitleEditing } from '../';
-import { Todo, Status, putData, deleteData } from '../../api';
-import { validateInput } from '../../helpers/validateInput';
+import { StatusCheckbox } from '../';
+import { Cancel, Done, Editing, Trash } from '../icons';
+import { deleteTodo, updateTodo } from '../../api/todos';
+import { validateTodoInput } from '../../helpers/validateTodoInput';
+import { getTodoValidateError } from '../../helpers/getTodoValidateError';
+import { Todo } from '../../interfaces';
 import style from './tasksItem.module.scss';
-
 interface TasksItemProps {
   task: Todo;
-  useTrigger: () => void;
-  currStatus: Status;
+  fetchNewData: () => void;
 }
 
-export const TasksItem: React.FC<TasksItemProps> = ({ task, useTrigger }) => {
+export const TasksItem: React.FC<TasksItemProps> = ({ task, fetchNewData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [itemText, setItemText] = useState(task.title);
   const [checked, setChecked] = useState(task.isDone);
@@ -20,9 +21,13 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, useTrigger }) => {
   const timerRef = useRef<number>();
   const isFirstRender = useRef(true);
 
-  const onDelete = async () => {
-    await deleteData(task.id);
-    useTrigger();
+  const deleteTask = async () => {
+    try {
+      await deleteTodo(task.id);
+      fetchNewData();
+    } catch (e) {
+      alert('Неудалось удалить задачу, попробуйте позже.');
+    }
   };
 
   const cancelBlur = () => {
@@ -36,32 +41,26 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, useTrigger }) => {
     }, 100);
   };
 
-  const startEditing = () => {
+  const changeTask = () => {
     setIsEditing(true);
 
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus();
-        // inputRef.current.setSelectionRange(
-        //   inputRef.current.value.length,
-        //   inputRef.current.value.length
-        // );
       }
     });
   };
 
-  const stopEditing = async () => {
+  const saveChanges = async () => {
     cancelBlur();
 
     if (validateTimerRef.current) {
       clearTimeout(validateTimerRef.current);
     }
 
-    const err = validateInput(itemText);
-
-    if (err) {
+    if (!validateTodoInput(itemText)) {
       if (inputRef.current) {
-        setValidateError(err);
+        setValidateError(getTodoValidateError(itemText));
 
         validateTimerRef.current = setTimeout(() => {
           setValidateError(null);
@@ -75,12 +74,16 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, useTrigger }) => {
     setIsEditing(false);
 
     if (task.title !== itemText) {
-      await putData(task, itemText, checked);
-      useTrigger();
+      try {
+        await updateTodo(task.id, itemText, checked);
+        fetchNewData();
+      } catch (e) {
+        alert('Неудалось обновить задачу, попробуйте позже.');
+      }
     }
   };
 
-  const cancelEditing = () => {
+  const cancelChanges = () => {
     cancelBlur();
     setValidateError(null);
     setIsEditing(false);
@@ -98,30 +101,59 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, useTrigger }) => {
         return;
       }
 
-      await putData(task, itemText, checked);
-      useTrigger();
+      try {
+        await updateTodo(task.id, itemText, checked);
+        fetchNewData();
+      } catch (e) {
+        alert('Неудалось обновить задачу, попробуйте позже.');
+      }
     })();
   }, [checked]);
 
   return (
     <li className={style.item}>
       <StatusCheckbox checked={checked} toggleChecked={toggleChecked} />
-      <TitleEditing
-        isEditing={isEditing}
-        itemText={itemText}
-        setItemText={setItemText}
-        checked={checked}
-        inputRef={inputRef}
-        onBlur={onBlur}
-        error={validateError}
-      />
-      <EditingBtns
-        startEditing={startEditing}
-        stopEditing={stopEditing}
-        isEditing={isEditing}
-        onDelete={onDelete}
-        cancelEditing={cancelEditing}
-      />
+      <div className={style.inputWrapper}>
+        {' '}
+        {isEditing ? (
+          <>
+            {' '}
+            <input
+              ref={inputRef}
+              value={itemText}
+              onBlur={onBlur}
+              onChange={(e) => setItemText(e.target.value)}
+              className={style.input}
+            />
+            {validateError && (
+              <div className={style.validateError}>{validateError}</div>
+            )}
+          </>
+        ) : (
+          <p className={style[checked ? 'titleActive' : 'title']}>{itemText}</p>
+        )}
+      </div>
+      {isEditing ? (
+        <>
+          {' '}
+          <button onClick={saveChanges}>
+            <Done />{' '}
+          </button>
+          <button onClick={cancelChanges}>
+            <Cancel />
+          </button>
+        </>
+      ) : (
+        <>
+          {' '}
+          <button onClick={changeTask}>
+            <Editing />
+          </button>
+          <button onClick={deleteTask}>
+            <Trash />
+          </button>
+        </>
+      )}
     </li>
   );
 };
