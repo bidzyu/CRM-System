@@ -1,0 +1,10 @@
+@use '../../scss/variables' as *;
+
+.items {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 1rem;
+  color: $base-color-1;
+}
+
