@@ -12,23 +12,6 @@ body {
   color: $base-color-2;
 }
 
-button {
-  font-size: $btn-fz;
-  padding: $btn-padding;
-  border-radius: $btn-br;
-  background-color: $base-color-1;
-  border: 1px solid $base-color-2;
-  color: $base-color-2;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    border-color: $base-color-4;
-    background-color: $base-color-4;
-  }
-}
-
-svg {
-  width: 2rem;
-  height: 1.25rem;
-  fill: $base-color-2;
+#root {
+  min-height: 100vh;
 }

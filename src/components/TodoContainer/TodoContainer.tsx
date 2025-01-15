@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { TasksItems, CreateTask, TasksFilter } from '../';
 import { fetchTodos } from '../../api/todos';
-import { TodoFilterStatus, Todo, TodoInfo } from '../../interfaces';
-import style from './todoContainer.module.scss';
+import { TodoFilterStatus, type Todo, type TodoInfo } from '../../interfaces';
+import { Flex } from 'antd';
 
 const TodoContainer: React.FC = () => {
   const [tasks, setTasks] = useState<Todo[]>([]);
@@ -10,9 +10,23 @@ const TodoContainer: React.FC = () => {
   const [currStatus, setCurrStatus] = useState<TodoFilterStatus>(
     TodoFilterStatus.ALL
   );
+  const fetchTimerRef = useRef<number>();
+
+  const refetchNewData = () => {
+    fetchTimerRef.current = setInterval(() => {
+      fetchNewData();
+    }, 5000);
+  };
+
+  const cancelRefetch = () => {
+    clearInterval(fetchTimerRef.current);
+  };
 
   useEffect(() => {
     fetchNewData();
+    refetchNewData();
+
+    return () => cancelRefetch();
   }, [currStatus]);
 
   const changeStatus = (status: TodoFilterStatus) => {
@@ -31,7 +45,16 @@ const TodoContainer: React.FC = () => {
   };
 
   return (
-    <div className={style.container}>
+    <Flex
+      vertical
+      gap={'middle'}
+      style={{
+        width: '100%',
+        maxWidth: '600px',
+        margin: '0 auto',
+        padding: '30px 5px',
+      }}
+    >
       <CreateTask fetchNewData={fetchNewData} />
       <TasksFilter
         info={info}
@@ -39,7 +62,7 @@ const TodoContainer: React.FC = () => {
         changeStatus={changeStatus}
       />
       <TasksItems tasks={tasks} fetchNewData={fetchNewData} />
-    </div>
+    </Flex>
   );
 };
 

@@ -1,5 +1,5 @@
-import { TodoFilterStatus, TodoInfo } from '../../interfaces';
-import style from './tasksFilter.module.scss';
+import { TodoFilterStatus, type TodoInfo } from '../../interfaces';
+import { Radio } from 'antd';
 
 const translatedStatus: Record<TodoFilterStatus, string> = {
   [TodoFilterStatus.ALL]: 'Все',
@@ -18,7 +18,12 @@ export const TasksFilter: React.FC<TasksFilterProps> = ({
   info,
 }) => {
   return (
-    <div className={style.filter}>
+    <Radio.Group
+      block
+      value={currStatus}
+      size="large"
+      style={{ width: '100%' }}
+    >
       {Object.entries(TodoFilterStatus).map(([key, status]) => {
         let count = '';
 
@@ -27,17 +32,16 @@ export const TasksFilter: React.FC<TasksFilterProps> = ({
         }
 
         return (
-          <button
+          <Radio.Button
+            value={status}
             onClick={() => changeStatus(status)}
-            className={
-              style[currStatus === status ? 'buttonSelected' : 'button']
-            }
             key={key}
+            
           >
             {`${translatedStatus[status]}${count}`}
-          </button>
+          </Radio.Button>
         );
       })}
-    </div>
+    </Radio.Group>
   );
 };
