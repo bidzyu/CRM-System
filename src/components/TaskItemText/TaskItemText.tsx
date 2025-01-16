@@ -4,16 +4,16 @@ import type { Todo } from '../../interfaces';
 
 const textBlockStyle: React.CSSProperties = { width: '70%' };
 
-interface TaskItemTextProps {
+interface TaskItemTextProps extends Pick<Todo, 'title' | 'id'> {
   isChecked: boolean;
   isEditing: boolean;
-  task: Todo;
 }
 
 export const TaskItemText: React.FC<TaskItemTextProps> = ({
   isChecked,
   isEditing,
-  task,
+  title,
+  id,
 }) => {
   return (
     <Form.Item
@@ -24,8 +24,8 @@ export const TaskItemText: React.FC<TaskItemTextProps> = ({
           validator: todoInputValidator,
         },
       ]}
-      name={String(task.id)}
-      initialValue={task.title}
+      name={String(id)}
+      initialValue={title}
     >
       <Input.TextArea
         autoSize

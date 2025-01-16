@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { TasksItems, CreateTask, TasksFilter } from '../';
 import { fetchTodos } from '../../api/todos';
 import { TodoFilterStatus, type Todo, type TodoInfo } from '../../interfaces';
@@ -12,28 +12,7 @@ const TodoContainer: React.FC = () => {
   );
   const fetchTimerRef = useRef<number>();
 
-  const refetchNewData = () => {
-    fetchTimerRef.current = setInterval(() => {
-      fetchNewData();
-    }, 5000);
-  };
-
-  const cancelRefetch = () => {
-    clearInterval(fetchTimerRef.current);
-  };
-
-  useEffect(() => {
-    fetchNewData();
-    refetchNewData();
-
-    return () => cancelRefetch();
-  }, [currStatus]);
-
-  const changeStatus = (status: TodoFilterStatus) => {
-    setCurrStatus(status);
-  };
-
-  const fetchNewData = async () => {
+  const fetchNewData = useCallback(async () => {
     try {
       const data = await fetchTodos(currStatus);
 
@@ -42,7 +21,31 @@ const TodoContainer: React.FC = () => {
     } catch (e) {
       alert('Неудалось получить данные, попробуйте позже.');
     }
+  }, [currStatus]);
+
+  const refetchNewData = useCallback(() => {
+    fetchTimerRef.current = setInterval(() => {
+      fetchNewData();
+    }, 5000);
+  }, [currStatus]);
+
+  const cancelRefetch = () => {
+    clearInterval(fetchTimerRef.current);
   };
+
+  const changeStatus = useCallback(
+    (status: TodoFilterStatus) => {
+      setCurrStatus(status);
+    },
+    [currStatus]
+  );
+
+  useEffect(() => {
+    fetchNewData();
+    refetchNewData();
+
+    return () => cancelRefetch();
+  }, [currStatus]);
 
   return (
     <Flex
@@ -57,7 +60,9 @@ const TodoContainer: React.FC = () => {
     >
       <CreateTask fetchNewData={fetchNewData} />
       <TasksFilter
-        info={info}
+        all={info?.all}
+        inWork={info?.inWork}
+        completed={info?.completed}
         currStatus={currStatus}
         changeStatus={changeStatus}
       />

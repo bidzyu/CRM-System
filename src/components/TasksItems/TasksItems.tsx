@@ -14,7 +14,13 @@ export const TasksItems: React.FC<TasksItemsProps> = ({
   return (
     <List>
       {tasks.map((task) => (
-        <TasksItem task={task} key={task.id} fetchNewData={fetchNewData} />
+        <TasksItem
+          isDone={task.isDone}
+          title={task.title}
+          id={task.id}
+          key={`${task.id}-${task.title}-${task.isDone}`}
+          fetchNewData={fetchNewData}
+        />
       ))}
     </List>
   );
