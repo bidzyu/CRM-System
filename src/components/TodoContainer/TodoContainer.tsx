@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { TasksItems, CreateTask, TasksFilter } from '../';
 import { fetchTodos } from '../../api/todos';
-import { TodoFilterStatus, Todo, TodoInfo } from '../../interfaces';
-import style from './todoContainer.module.scss';
+import { TodoFilterStatus, type Todo, type TodoInfo } from '../../interfaces';
+import { Flex } from 'antd';
 
 const TodoContainer: React.FC = () => {
   const [tasks, setTasks] = useState<Todo[]>([]);
@@ -10,16 +10,9 @@ const TodoContainer: React.FC = () => {
   const [currStatus, setCurrStatus] = useState<TodoFilterStatus>(
     TodoFilterStatus.ALL
   );
+  const fetchTimerRef = useRef<number>();
 
-  useEffect(() => {
-    fetchNewData();
-  }, [currStatus]);
-
-  const changeStatus = (status: TodoFilterStatus) => {
-    setCurrStatus(status);
-  };
-
-  const fetchNewData = async () => {
+  const fetchNewData = useCallback(async () => {
     try {
       const data = await fetchTodos(currStatus);
 
@@ -28,18 +21,53 @@ const TodoContainer: React.FC = () => {
     } catch (e) {
       alert('Неудалось получить данные, попробуйте позже.');
     }
+  }, [currStatus]);
+
+  const refetchNewData = useCallback(() => {
+    fetchTimerRef.current = setInterval(() => {
+      fetchNewData();
+    }, 5000);
+  }, [currStatus]);
+
+  const cancelRefetch = () => {
+    clearInterval(fetchTimerRef.current);
   };
 
+  const changeStatus = useCallback(
+    (status: TodoFilterStatus) => {
+      setCurrStatus(status);
+    },
+    [currStatus]
+  );
+
+  useEffect(() => {
+    fetchNewData();
+    refetchNewData();
+
+    return () => cancelRefetch();
+  }, [currStatus]);
+
   return (
-    <div className={style.container}>
+    <Flex
+      vertical
+      gap={'middle'}
+      style={{
+        width: '100%',
+        maxWidth: '600px',
+        margin: '0 auto',
+        padding: '30px 5px',
+      }}
+    >
       <CreateTask fetchNewData={fetchNewData} />
       <TasksFilter
-        info={info}
+        all={info?.all}
+        inWork={info?.inWork}
+        completed={info?.completed}
         currStatus={currStatus}
         changeStatus={changeStatus}
       />
       <TasksItems tasks={tasks} fetchNewData={fetchNewData} />
-    </div>
+    </Flex>
   );
 };
 

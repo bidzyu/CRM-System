@@ -1,43 +1,48 @@
-import { TodoFilterStatus, TodoInfo } from '../../interfaces';
-import style from './tasksFilter.module.scss';
+import { TodoFilterStatus } from '../../interfaces';
+import { Radio } from 'antd';
+import { memo } from 'react';
 
 const translatedStatus: Record<TodoFilterStatus, string> = {
   [TodoFilterStatus.ALL]: 'Все',
   [TodoFilterStatus.COMPLETED]: 'Выполненные',
   [TodoFilterStatus.INWORK]: 'В работе',
 };
-interface TasksFilterProps {
+
+type StatusInfo = Record<TodoFilterStatus, number | undefined>;
+interface TasksFilterProps extends StatusInfo {
   changeStatus: (status: TodoFilterStatus) => any;
-  info: TodoInfo | undefined;
   currStatus: TodoFilterStatus;
 }
 
-export const TasksFilter: React.FC<TasksFilterProps> = ({
-  changeStatus,
-  currStatus,
-  info,
-}) => {
-  return (
-    <div className={style.filter}>
-      {Object.entries(TodoFilterStatus).map(([key, status]) => {
-        let count = '';
+export const TasksFilter: React.FC<TasksFilterProps> = memo(
+  ({ changeStatus, currStatus, all, inWork, completed }) => {
+    return (
+      <Radio.Group
+        block
+        value={currStatus}
+        size="large"
+        style={{ width: '100%' }}
+      >
+        {Object.entries(TodoFilterStatus).map(([key, status]) => {
+          const info: StatusInfo = { all, inWork, completed };
 
-        if (info) {
-          count += `(${info[status]})`;
-        }
+          let count = '';
 
-        return (
-          <button
-            onClick={() => changeStatus(status)}
-            className={
-              style[currStatus === status ? 'buttonSelected' : 'button']
-            }
-            key={key}
-          >
-            {`${translatedStatus[status]}${count}`}
-          </button>
-        );
-      })}
-    </div>
-  );
-};
+          if (info[status]) {
+            count += `(${info[status]})`;
+          }
+
+          return (
+            <Radio.Button
+              value={status}
+              onClick={() => changeStatus(status)}
+              key={key}
+            >
+              {`${translatedStatus[status]}${count}`}
+            </Radio.Button>
+          );
+        })}
+      </Radio.Group>
+    );
+  }
+);

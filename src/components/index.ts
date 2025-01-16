@@ -1,6 +1,9 @@
 export { CreateTask } from './CreateTask/CreateTask';
-export { StatusCheckbox } from './StatusCheckbox/StatusCheckbox';
 export { TaskForm } from './TaskForm/TaskForm';
 export { TasksFilter } from './TasksFilter/TasksFilter';
 export { TasksItem } from './TasksItem/TasksItem';
+export { TaskItemText } from './TaskItemText/TaskItemText';
+export { TaskItemBtns } from './TaskItemBtns/TaskItemBtns';
+export { TaskItemEditingBtns } from './TaskItemBtns/TaskItemEditingBtns';
 export { TasksItems } from './TasksItems/TasksItems';
+export { AppMenu } from './AppMenu/AppMenu';

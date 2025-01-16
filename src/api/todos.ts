@@ -1,28 +1,25 @@
 import { BASE_URL } from './config';
-import {
+import type {
   Todo,
   TodoInfo,
   TodoRequest,
   MetaResponse,
   TodoFilterStatus,
 } from '../interfaces';
+import axios, { AxiosResponse } from 'axios';
 
-export const createTodo = async (title: string): Promise<Todo> => {
+const instance = axios.create({
+  baseURL: BASE_URL,
+  timeout: 3000,
+});
+
+export const createTodo = async (title: string) => {
   try {
     const todo: TodoRequest = {
       title,
     };
 
-    const response = await fetch(BASE_URL + '/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify(todo),
-    });
-    const data: Todo = await response.json();
-
-    return data;
+    await instance.post<TodoRequest, AxiosResponse<Todo>>('/todos', todo);
   } catch (e) {
     throw e;
   }
@@ -32,10 +29,11 @@ export const fetchTodos = async (
   status: TodoFilterStatus
 ): Promise<MetaResponse<Todo, TodoInfo>> => {
   try {
-    const response = await fetch(BASE_URL + `/todos?filter=${status}`);
-    const data: MetaResponse<Todo, TodoInfo> = await response.json();
+    const response = await instance.get<MetaResponse<Todo, TodoInfo>>(
+      `/todos?filter=${status}`
+    );
 
-    return data;
+    return response.data;
   } catch (e) {
     throw e;
   }
@@ -52,13 +50,10 @@ export const updateTodo = async (
       isDone,
     };
 
-    await fetch(BASE_URL + `/todos/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify(updatedTodo),
-    });
+    await instance.put<TodoRequest, AxiosResponse<Todo>>(
+      `/todos/${id}`,
+      updatedTodo
+    );
   } catch (e) {
     throw e;
   }
@@ -66,9 +61,7 @@ export const updateTodo = async (
 
 export const deleteTodo = async (id: number) => {
   try {
-    await fetch(BASE_URL + `/todos/${id}`, {
-      method: 'DELETE',
-    });
+    await instance.delete<AxiosResponse<Todo>>(`/todos/${id}`);
   } catch (e) {
     throw e;
   }

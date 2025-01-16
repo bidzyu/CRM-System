@@ -1,6 +1,6 @@
+import { List } from 'antd';
 import { TasksItem } from '../';
-import { Todo } from '../../interfaces';
-import style from './tasksItems.module.scss';
+import type { Todo } from '../../interfaces';
 
 interface TasksItemsProps {
   tasks: Todo[];
@@ -12,10 +12,16 @@ export const TasksItems: React.FC<TasksItemsProps> = ({
   fetchNewData,
 }) => {
   return (
-    <ul className={style.items}>
+    <List>
       {tasks.map((task) => (
-        <TasksItem task={task} key={task.id} fetchNewData={fetchNewData} />
+        <TasksItem
+          isDone={task.isDone}
+          title={task.title}
+          id={task.id}
+          key={`${task.id}-${task.title}-${task.isDone}`}
+          fetchNewData={fetchNewData}
+        />
       ))}
-    </ul>
+    </List>
   );
 };

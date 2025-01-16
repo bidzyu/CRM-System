@@ -1,8 +1,8 @@
-import TasksPage from './pages/TasksPage';
+import AppLayout from './components/AppLayout/AppLayout';
 import './App.scss';
 
 const App: React.FC = () => {
-  return <TasksPage />;
+  return <AppLayout />;
 };
 
 export default App;
