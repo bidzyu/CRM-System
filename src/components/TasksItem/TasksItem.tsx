@@ -37,7 +37,7 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, fetchNewData }) => {
   const deleteTask = async () => {
     try {
       await deleteTodo(task.id);
-      fetchNewData();
+      await fetchNewData();
     } catch (e) {
       alert('Неудалось удалить задачу, попробуйте позже.');
     }
@@ -50,7 +50,7 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, fetchNewData }) => {
     if (task.title !== itemText) {
       try {
         await updateTodo(task.id, itemText, isChecked);
-        fetchNewData();
+        await fetchNewData();
       } catch (e) {
         alert('Неудалось обновить задачу, попробуйте позже.');
       }
@@ -76,7 +76,7 @@ export const TasksItem: React.FC<TasksItemProps> = ({ task, fetchNewData }) => {
       try {
         const itemText = form.getFieldValue(String(task.id));
         await updateTodo(task.id, itemText, isChecked);
-        fetchNewData();
+        await fetchNewData();
       } catch (e) {
         alert('Неудалось обновить задачу, попробуйте позже.');
       }

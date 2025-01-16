@@ -6,3 +6,4 @@ export { TaskItemText } from './TaskItemText/TaskItemText';
 export { TaskItemBtns } from './TaskItemBtns/TaskItemBtns';
 export { TaskItemEditingBtns } from './TaskItemBtns/TaskItemEditingBtns';
 export { TasksItems } from './TasksItems/TasksItems';
+export { AppMenu } from './AppMenu/AppMenu';

@@ -5,14 +5,14 @@ interface CreateTaskProps {
 }
 
 export const CreateTask: React.FC<CreateTaskProps> = ({ fetchNewData }) => {
-  const handleSumbmit = async (taskText: string) => {
+  const handleSubmit = async (taskText: string) => {
     try {
       await createTodo(taskText.trim());
-      fetchNewData();
+      await fetchNewData();
     } catch (e) {
       alert('Неудалось создать задачу, попробуйте позже.');
     }
   };
 
-  return <TaskForm handleSumbmit={handleSumbmit} />;
+  return <TaskForm handleSubmit={handleSubmit} />;
 };

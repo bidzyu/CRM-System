@@ -2,16 +2,16 @@ import { Form, Button, Input, Flex } from 'antd';
 import { todoInputValidator } from '../../helpers/validateTodoInput';
 
 interface TaskFormProps {
-  handleSumbmit: (taskText: string) => void;
+  handleSubmit: (taskText: string) => void;
 }
 
 const TASK_INPUT = 'taskInput';
 
-export const TaskForm: React.FC<TaskFormProps> = ({ handleSumbmit }) => {
+export const TaskForm: React.FC<TaskFormProps> = ({ handleSubmit }) => {
   const [form] = Form.useForm();
 
   const onFinish = () => {
-    handleSumbmit(form.getFieldValue(TASK_INPUT));
+    handleSubmit(form.getFieldValue(TASK_INPUT));
     form.setFieldValue(TASK_INPUT, '');
   };
 
