@@ -2,10 +2,11 @@ import React from 'react';
 import { Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
 import { SnippetsOutlined, UserOutlined } from '@ant-design/icons';
+import { RouterRoutes } from '../../interfaces/routerRoutes';
 
 const items = [
-  { icon: UserOutlined, path: '/', label: 'Профиль' },
-  { icon: SnippetsOutlined, path: '/todo', label: 'Список задач' },
+  { icon: UserOutlined, path: RouterRoutes.PROFILE, label: 'Профиль' },
+  { icon: SnippetsOutlined, path: RouterRoutes.TODOS, label: 'Список задач' },
 ].map((obj) => ({
   key: obj.path,
   icon: React.createElement(obj.icon),

@@ -1,5 +1,5 @@
 import { Form, Button, Input, Flex } from 'antd';
-import { todoInputValidator } from '../../helpers/validateTodoInput';
+import { todoInputValidator } from '../../../../helpers/validateTodoInput';
 
 interface TaskFormProps {
   handleSubmit: (taskText: string) => void;

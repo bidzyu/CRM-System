@@ -1,7 +1,7 @@
 import {
   TODO_TITLE_MAX_LENGTH,
   TODO_TITLE_MIN_LENGTH,
-} from '../consts/todoValidateParams';
+} from '../consts/validateTodoParams';
 
 const validateTodoInput = (str: string): boolean => {
   const length = str.trim().length;

@@ -1,8 +1,8 @@
-import AppLayout from './components/AppLayout/AppLayout';
+import AppRouter from './router/AppRouter';
 import './App.scss';
 
 const App: React.FC = () => {
-  return <AppLayout />;
+  return <AppRouter />;
 };
 
 export default App;

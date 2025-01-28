@@ -1,17 +1,12 @@
-import { BASE_URL } from './config';
 import type {
   Todo,
   TodoInfo,
   TodoRequest,
   MetaResponse,
   TodoFilterStatus,
-} from '../interfaces';
-import axios, { AxiosResponse } from 'axios';
-
-const instance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 3000,
-});
+} from '../interfaces/todosApi';
+import { AxiosResponse } from 'axios';
+import { api } from './axiosConfig';
 
 export const createTodo = async (title: string) => {
   try {
@@ -19,7 +14,7 @@ export const createTodo = async (title: string) => {
       title,
     };
 
-    await instance.post<TodoRequest, AxiosResponse<Todo>>('/todos', todo);
+    await api.post<TodoRequest, AxiosResponse<Todo>>('/todos', todo);
   } catch (e) {
     throw e;
   }
@@ -29,7 +24,7 @@ export const fetchTodos = async (
   status: TodoFilterStatus
 ): Promise<MetaResponse<Todo, TodoInfo>> => {
   try {
-    const response = await instance.get<MetaResponse<Todo, TodoInfo>>(
+    const response = await api.get<MetaResponse<Todo, TodoInfo>>(
       `/todos?filter=${status}`
     );
 
@@ -50,7 +45,7 @@ export const updateTodo = async (
       isDone,
     };
 
-    await instance.put<TodoRequest, AxiosResponse<Todo>>(
+    await api.put<TodoRequest, AxiosResponse<Todo>>(
       `/todos/${id}`,
       updatedTodo
     );
@@ -61,7 +56,7 @@ export const updateTodo = async (
 
 export const deleteTodo = async (id: number) => {
   try {
-    await instance.delete<AxiosResponse<Todo>>(`/todos/${id}`);
+    await api.delete<AxiosResponse<Todo>>(`/todos/${id}`);
   } catch (e) {
     throw e;
   }

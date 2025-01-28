@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState, memo } from 'react';
 import { Checkbox, Card, List, Form, Flex } from 'antd';
-import { deleteTodo, updateTodo } from '../../api/todos';
-import type { Todo } from '../../interfaces';
-import { TaskItemText } from '../TaskItemText/TaskItemText';
-import { TaskItemBtns } from '../TaskItemBtns/TaskItemBtns';
-import { TaskItemEditingBtns } from '../TaskItemBtns/TaskItemEditingBtns';
-
-interface TasksItemProps extends Omit<Todo, 'created'> {
-  // task: Todo;
-  fetchNewData: () => void;
-}
+import { deleteTodo, fetchTodos, updateTodo } from '../../../../api/todos';
+import type { Todo } from '../../../../interfaces/todosApi';
+import { TaskItemText } from './TaskItemText/TaskItemText';
+import { TaskItemBtns } from './TaskItemBtns/TaskItemBtns';
+import { TaskItemEditingBtns } from './TaskItemBtns/TaskItemEditingBtns';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import {
+  deleteStateTodo,
+  setTodoError,
+  updateStateTodo,
+  updateStateTodos,
+} from '../../../../store/reducers/todosSlice';
+import { getTodosStatus } from '../../../../store/selectors/todos';
 
 const boxStyle: React.CSSProperties = {
   width: '100%',
@@ -17,8 +20,13 @@ const boxStyle: React.CSSProperties = {
 };
 const listStyle: React.CSSProperties = { display: 'block', width: '100%' };
 
+type TasksItemProps = Todo;
+
 export const TasksItem: React.FC<TasksItemProps> = memo(
-  ({ fetchNewData, title, isDone, id }) => {
+  ({ title, isDone, id, created }) => {
+    const status = useAppSelector(getTodosStatus);
+    const dispatch = useAppDispatch();
+
     const [isEditing, setIsEditing] = useState(false);
     const [isChecked, setIsChecked] = useState(isDone);
     const [form] = Form.useForm();
@@ -35,12 +43,29 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
       focusTextField();
     };
 
-    const deleteTask = async () => {
+    const updateStateTask = (text?: string, done?: boolean) => {
+      const updatedTodo: Todo = {
+        title: text || title,
+        created,
+        id,
+        isDone: typeof done === 'boolean' ? done : isDone,
+      };
+      dispatch(updateStateTodo(updatedTodo));
+    };
+
+    const updateTasks = async () => {
+      const newTodos = await fetchTodos(status);
+      dispatch(updateStateTodos(newTodos));
+    };
+
+    const deleteStateTask = async () => {
+      dispatch(deleteStateTodo(id));
+
       try {
         await deleteTodo(id);
-        await fetchNewData();
+        await updateTasks();
       } catch (e) {
-        alert('Неудалось удалить задачу, попробуйте позже.');
+        dispatch(setTodoError('Неудалось удалить задачу, попробуйте позже.'));
       }
     };
 
@@ -49,11 +74,15 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
       const itemText = form.getFieldValue(String(id)).trim();
 
       if (title !== itemText) {
+        updateStateTask(itemText);
+
         try {
           await updateTodo(id, itemText, isChecked);
-          await fetchNewData();
+          await updateTasks();
         } catch (e) {
-          alert('Неудалось обновить задачу, попробуйте позже.');
+          dispatch(
+            setTodoError('Неудалось обновить задачу, попробуйте позже.')
+          );
         }
       }
     };
@@ -73,13 +102,15 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
           isFirstRender.current = false;
           return;
         }
-
+        const itemText = form.getFieldValue(String(id));
+        updateStateTask(title, isChecked);
         try {
-          const itemText = form.getFieldValue(String(id));
           await updateTodo(id, itemText, isChecked);
-          await fetchNewData();
+          await updateTasks();
         } catch (e) {
-          alert('Неудалось обновить задачу, попробуйте позже.');
+          dispatch(
+            setTodoError('Неудалось обновить задачу, попробуйте позже.')
+          );
         }
       })();
     }, [isChecked]);
@@ -106,7 +137,10 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
               {isEditing ? (
                 <TaskItemEditingBtns cancelChanges={cancelChanges} />
               ) : (
-                <TaskItemBtns changeTask={changeTask} deleteTask={deleteTask} />
+                <TaskItemBtns
+                  changeTask={changeTask}
+                  deleteTask={deleteStateTask}
+                />
               )}
             </Flex>
           </Form>

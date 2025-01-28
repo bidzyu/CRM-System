@@ -1,51 +1,55 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { TasksItems, CreateTask, TasksFilter } from '../';
 import { fetchTodos } from '../../api/todos';
-import { TodoFilterStatus, type Todo, type TodoInfo } from '../../interfaces';
 import { Flex } from 'antd';
 
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import {
+  removeTodoError,
+  setTodoError,
+  updateStateTodos,
+} from '../../store/reducers/todosSlice';
+import { getTodosList, getTodosStatus } from '../../store/selectors/todos';
+
 const TodoContainer: React.FC = () => {
-  const [tasks, setTasks] = useState<Todo[]>([]);
-  const [info, setInfo] = useState<TodoInfo>();
-  const [currStatus, setCurrStatus] = useState<TodoFilterStatus>(
-    TodoFilterStatus.ALL
-  );
+  const status = useAppSelector(getTodosStatus);
+  const list = useAppSelector(getTodosList);
+  const dispatch = useAppDispatch();
+
   const fetchTimerRef = useRef<number>();
 
   const fetchNewData = useCallback(async () => {
     try {
-      const data = await fetchTodos(currStatus);
+      const data = await fetchTodos(status);
 
-      setTasks(data.data.sort((a) => (a.isDone ? -1 : 1)));
-      setInfo(data.info);
+      dispatch(updateStateTodos(data));
     } catch (e) {
-      alert('Неудалось получить данные, попробуйте позже.');
+      dispatch(setTodoError('Неудалось получить данные, попробуйте позже.'));
     }
-  }, [currStatus]);
+  }, [status]);
 
   const refetchNewData = useCallback(() => {
     fetchTimerRef.current = setInterval(() => {
       fetchNewData();
     }, 5000);
-  }, [currStatus]);
+  }, [status]);
 
   const cancelRefetch = () => {
     clearInterval(fetchTimerRef.current);
   };
 
-  const changeStatus = useCallback(
-    (status: TodoFilterStatus) => {
-      setCurrStatus(status);
-    },
-    [currStatus]
-  );
+  useEffect(() => {
+    cancelRefetch();
+    refetchNewData();
+  }, [list]);
 
   useEffect(() => {
+    cancelRefetch();
     fetchNewData();
     refetchNewData();
 
     return () => cancelRefetch();
-  }, [currStatus]);
+  }, [status]);
 
   return (
     <Flex
@@ -58,15 +62,9 @@ const TodoContainer: React.FC = () => {
         padding: '30px 5px',
       }}
     >
-      <CreateTask fetchNewData={fetchNewData} />
-      <TasksFilter
-        all={info?.all}
-        inWork={info?.inWork}
-        completed={info?.completed}
-        currStatus={currStatus}
-        changeStatus={changeStatus}
-      />
-      <TasksItems tasks={tasks} fetchNewData={fetchNewData} />
+      <CreateTask />
+      <TasksFilter />
+      <TasksItems />
     </Flex>
   );
 };

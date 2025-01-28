@@ -1,11 +1,7 @@
-import { Flex } from 'antd';
+import ProfileContainer from '../../components/ProfileContainer/ProfileContainer';
 
-const ProfilePage = () => {
-  return (
-    <Flex align={'center'} justify={'center'} style={{ height: '100vh' }}>
-      <h1>Привет</h1>
-    </Flex>
-  );
+const ProfilePage: React.FC = () => {
+  return <ProfileContainer />;
 };
 
 export default ProfilePage;
