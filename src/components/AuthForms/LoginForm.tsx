@@ -1,40 +1,29 @@
 import { Button, Checkbox, Form, Flex } from 'antd';
+import {
+  MyLogin,
+  MyPassword,
+  MySubmit,
+  MyText,
+  MyForm,
+  MyError,
+} from './MyAuthFormItems';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { useState } from 'react';
+
+import { loginUser } from '../../store/reducers/authorization/authAsyncThunk';
+
+import { LoadingStatus } from '../../interfaces/loadingStatus';
 import { RouterRoutes } from '../../interfaces/routerRoutes';
 import { LoginFormConfirm } from '../../interfaces/authForms';
 import { AuthData } from '../../interfaces/authApi';
-import { useState } from 'react';
-import MyLogin from './MyAuthFormItems/MyLogin';
-import MyPassword from './MyAuthFormItems/MyPassword';
-import MySubmit from './MyAuthFormItems/MySubmit';
-import MyText from './MyAuthFormItems/MyText';
-import MyForm from './MyAuthFormItems/MyForm';
-import MyError from './MyAuthFormItems/MyError';
-import { login as loginStore } from '../../store/reducers/authorizationSlice';
-import { useAppDispatch } from '../../store/store';
-import { loginUser } from '../../api/auth';
-
-const getErrorMessage = (status: number) => {
-  if (status === 400) {
-    return `Ошибка десериализации запроса или неверный ввод.`;
-  }
-
-  if (status === 401) {
-    return 'Неверные учетные данные.';
-  }
-
-  if (status === 500) {
-    return 'Внутренняя ошибка сервера.';
-  }
-
-  return 'Упс, произошла неизвестная ошибка.';
-};
 
 const LoginForm = () => {
-  const [error, setError] = useState('');
-  const [isSubmiting, setIsSubmiting] = useState(false);
+  const status = useAppSelector((state) => state.authorization.loading);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const [error, setError] = useState('');
 
   const onFinish = async (values: LoginFormConfirm) => {
     const { login, password } = values;
@@ -45,14 +34,9 @@ const LoginForm = () => {
     };
 
     try {
-      setIsSubmiting(true);
-      await loginUser(credentials);
-      dispatch(loginStore());
-      navigate(RouterRoutes.TODOS);
+      await dispatch(loginUser(credentials)).unwrap();
     } catch (e: any) {
-      console.log(e);
-      setIsSubmiting(false);
-      setError(getErrorMessage(e.status || 0));
+      setError(e);
     }
   };
 
@@ -68,7 +52,10 @@ const LoginForm = () => {
         title="Войдите в свою учетную запись"
         paragraph="Посмотрите, что происходит с вашим бизнесом"
       />
-      <MyError error={error} handleRemoveError={handleRemoveError} />
+      <MyError
+        error={error ? error : ''}
+        handleRemoveError={handleRemoveError}
+      />
       <MyLogin />
       <MyPassword />
       <Form.Item>
@@ -89,7 +76,7 @@ const LoginForm = () => {
       <MySubmit
         value="Войти"
         submitValue="Входим..."
-        isSubmiting={isSubmiting}
+        isSubmiting={status === LoadingStatus.LOADING}
       />
       <Form.Item style={{ marginTop: 50, textAlign: 'center' }}>
         Еще не зарегистрированы?

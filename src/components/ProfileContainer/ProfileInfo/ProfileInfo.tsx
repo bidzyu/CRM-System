@@ -1,6 +1,6 @@
 import { Flex } from 'antd';
-import { useState } from 'react';
 import EditInfo from './EditInfo';
+import { useState } from 'react';
 
 const ProfileInfo: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);

@@ -1,34 +1,28 @@
 import { Form, Input, Flex } from 'antd';
+import EditButtons from './EditButtons';
+import MyError from '../../AuthForms/MyAuthFormItems/MyError';
+
 import { useState } from 'react';
-import { Profile } from '../../../interfaces/authApi';
-import {
-  AuthLabels,
-  RegisterConfirmInputNames,
-  UserFieldType,
-} from '../../../interfaces/authForms';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+
 import {
   emailRules,
   nameRules,
   phoneRules,
 } from '../../../helpers/validateAuthRules';
-
-import { updateUserProfile } from '../../../api/auth';
 import {
   getUpdatedUserFields,
   shouldUserUpdate,
 } from '../../../helpers/updateUser';
-import MyError from '../../AuthForms/MyAuthFormItems/MyError';
-import EditButtons from './EditButtons';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { setUserProfile } from '../../../store/reducers/userProfileSlice';
-import { getUserProfile } from '../../../store/selectors/getUserProfile';
+import { getUserProfile } from '../../../store/selectors/userProfile';
 
-const getErrorMessage = (status: number = 0) => {
-  if (status === 400) return 'Электронная почта уже используется.';
-  if (status === 404) return 'Пользователь не найден.';
-  if (status === 500) return 'Внутренняя ошибка сервера.';
-  return 'Упс, возникла неизвестная ошибка...';
-};
+import {
+  AuthLabels,
+  RegisterConfirmInputNames,
+  UserFieldType,
+} from '../../../interfaces/authForms';
+import { Profile } from '../../../interfaces/authApi';
+import { updateUserProfile } from '../../../store/reducers/userProfile/userProfileAsyncThunk';
 
 interface EditInfoProps {
   isEdit: boolean;
@@ -63,11 +57,11 @@ const EditInfo: React.FC<EditInfoProps> = ({ isEdit, toggleEdit }) => {
 
     if (shouldUserUpdate(user, event)) {
       const updatedProfile = getUpdatedUserFields(user, event);
+
       try {
-        const newProfile = await updateUserProfile(updatedProfile);
-        await dispatch(setUserProfile(newProfile));
+        await dispatch(updateUserProfile(updatedProfile)).unwrap();
       } catch (e: any) {
-        setError(getErrorMessage(e.status));
+        setError(e);
       } finally {
         form.resetFields();
       }

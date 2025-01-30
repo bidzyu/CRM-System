@@ -21,7 +21,7 @@ export const AppMenu: React.FC = () => {
       mode="inline"
       defaultSelectedKeys={[location.pathname]}
       items={items}
-      style={{ border: 'none' }}
+      style={{ border: 'none', width: '100%' }}
     />
   );
 };

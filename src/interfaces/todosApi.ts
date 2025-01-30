@@ -4,6 +4,12 @@ export enum TodoFilterStatus {
   INWORK = 'inWork',
 }
 
+export interface UpdateParams {
+  id: number;
+  newTitle: string;
+  isDone: boolean;
+}
+
 export interface TodoRequest {
   title?: string;
   isDone?: boolean; // изменение статуса задачи происходит через этот флаг

@@ -1,6 +1,5 @@
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Form } from 'antd';
-
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 interface TaskItemEditingBtnsProps {
   cancelChanges: () => void;
 }

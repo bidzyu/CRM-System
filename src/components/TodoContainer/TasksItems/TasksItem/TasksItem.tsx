@@ -1,18 +1,23 @@
-import { useEffect, useRef, useState, memo } from 'react';
 import { Checkbox, Card, List, Form, Flex } from 'antd';
-import { deleteTodo, fetchTodos, updateTodo } from '../../../../api/todos';
-import type { Todo } from '../../../../interfaces/todosApi';
 import { TaskItemText } from './TaskItemText/TaskItemText';
 import { TaskItemBtns } from './TaskItemBtns/TaskItemBtns';
 import { TaskItemEditingBtns } from './TaskItemBtns/TaskItemEditingBtns';
+
+import { useEffect, useRef, useState, memo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../store/store';
+
 import {
   deleteStateTodo,
-  setTodoError,
   updateStateTodo,
-  updateStateTodos,
-} from '../../../../store/reducers/todosSlice';
-import { getTodosStatus } from '../../../../store/selectors/todos';
+} from '../../../../store/reducers/todos/todosSlice';
+import {
+  updateTodo,
+  deleteTodo,
+  fetchTodos,
+} from '../../../../store/reducers/todos/todosAsyncThunk';
+import { getTodosFilter } from '../../../../store/selectors/todos';
+
+import { Todo, UpdateParams } from '../../../../interfaces/todosApi';
 
 const boxStyle: React.CSSProperties = {
   width: '100%',
@@ -24,7 +29,7 @@ type TasksItemProps = Todo;
 
 export const TasksItem: React.FC<TasksItemProps> = memo(
   ({ title, isDone, id, created }) => {
-    const status = useAppSelector(getTodosStatus);
+    const filter = useAppSelector(getTodosFilter);
     const dispatch = useAppDispatch();
 
     const [isEditing, setIsEditing] = useState(false);
@@ -38,7 +43,7 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
       });
     };
 
-    const changeTask = () => {
+    const handleChangeTask = () => {
       setIsEditing(true);
       focusTextField();
     };
@@ -54,40 +59,38 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
     };
 
     const updateTasks = async () => {
-      const newTodos = await fetchTodos(status);
-      dispatch(updateStateTodos(newTodos));
+      return await dispatch(fetchTodos(filter));
     };
 
-    const deleteStateTask = async () => {
+    const updateTask = async (itemText: string) => {
+      const updateParams: UpdateParams = {
+        id,
+        newTitle: itemText,
+        isDone: isChecked,
+      };
+
+      return await dispatch(updateTodo(updateParams));
+    };
+
+    const handleDeleteTask = async () => {
       dispatch(deleteStateTodo(id));
 
-      try {
-        await deleteTodo(id);
-        await updateTasks();
-      } catch (e) {
-        dispatch(setTodoError('Неудалось удалить задачу, попробуйте позже.'));
-      }
+      await dispatch(deleteTodo(id));
+      await updateTasks();
     };
 
-    const saveChanges = async () => {
+    const handleSaveChanges = async () => {
       setIsEditing(false);
-      const itemText = form.getFieldValue(String(id)).trim();
+      const itemText: string = form.getFieldValue(String(id)).trim();
 
-      if (title !== itemText) {
+      if (itemText && title !== itemText) {
         updateStateTask(itemText);
-
-        try {
-          await updateTodo(id, itemText, isChecked);
-          await updateTasks();
-        } catch (e) {
-          dispatch(
-            setTodoError('Неудалось обновить задачу, попробуйте позже.')
-          );
-        }
+        await updateTask(itemText);
+        await updateTasks();
       }
     };
 
-    const cancelChanges = () => {
+    const handleCancelChanges = () => {
       setIsEditing(false);
       form.setFieldValue(String(id), title);
     };
@@ -104,14 +107,9 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
         }
         const itemText = form.getFieldValue(String(id));
         updateStateTask(title, isChecked);
-        try {
-          await updateTodo(id, itemText, isChecked);
-          await updateTasks();
-        } catch (e) {
-          dispatch(
-            setTodoError('Неудалось обновить задачу, попробуйте позже.')
-          );
-        }
+
+        await updateTask(itemText);
+        await updateTasks();
       })();
     }, [isChecked]);
 
@@ -120,7 +118,7 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
         <Card>
           <Form
             layout="inline"
-            onFinish={saveChanges}
+            onFinish={handleSaveChanges}
             onFinishFailed={focusTextField}
             form={form}
           >
@@ -135,11 +133,11 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
                 id={id}
               />
               {isEditing ? (
-                <TaskItemEditingBtns cancelChanges={cancelChanges} />
+                <TaskItemEditingBtns cancelChanges={handleCancelChanges} />
               ) : (
                 <TaskItemBtns
-                  changeTask={changeTask}
-                  deleteTask={deleteStateTask}
+                  changeTask={handleChangeTask}
+                  deleteTask={handleDeleteTask}
                 />
               )}
             </Flex>

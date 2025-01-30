@@ -1,26 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { tasksSort } from '../../helpers/tasksSort';
+import { tasksSort } from '../../../helpers/tasksSort';
+import { extraReducers } from './todoExtraReducers';
 import {
   Todo,
   TodoInfo,
   MetaResponse,
   TodoFilterStatus,
-} from '../../interfaces/todosApi';
+} from '../../../interfaces/todosApi';
+import { LoadingStatus } from '../../../interfaces/loadingStatus';
 
-interface Todos {
+export interface Todos {
   list: Todo[];
   info: TodoInfo | undefined;
   total: number;
-  status: TodoFilterStatus;
-  error: string | null;
+  filter: TodoFilterStatus;
+  status: LoadingStatus;
+  error: string | undefined;
 }
 
 const initialState: Todos = {
   list: [],
   info: undefined,
   total: 0,
-  status: TodoFilterStatus.ALL,
-  error: null,
+  filter: TodoFilterStatus.ALL,
+  status: LoadingStatus.INITIAL,
+  error: undefined,
 };
 
 const todosSlice = createSlice({
@@ -100,16 +104,16 @@ const todosSlice = createSlice({
       state,
       { payload }: PayloadAction<TodoFilterStatus>
     ) => {
-      state.status = payload;
+      state.filter = payload;
     },
     setTodoError: (state, { payload }: PayloadAction<string>) => {
       state.error = payload;
     },
     removeTodoError: (state) => {
-      state.error = null;
+      state.error = undefined;
     },
   },
-  extraReducers(builder) {},
+  extraReducers,
 });
 
 export default todosSlice.reducer;

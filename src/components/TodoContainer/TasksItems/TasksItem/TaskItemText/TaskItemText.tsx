@@ -1,6 +1,6 @@
 import { Form, Input } from 'antd';
 import { todoInputValidator } from '../../../../../helpers/validateTodoInput';
-import type { Todo } from '../../../../../interfaces/todosApi';
+import { Todo } from '../../../../../interfaces/todosApi';
 
 const textBlockStyle: React.CSSProperties = { width: '70%' };
 

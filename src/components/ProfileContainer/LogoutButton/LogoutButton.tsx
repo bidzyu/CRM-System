@@ -1,28 +1,21 @@
-import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../../api/auth';
-import { RouterRoutes } from '../../../interfaces/routerRoutes';
+import { Button, theme, Tooltip } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
 import { useAppDispatch } from '../../../store/store';
-import { logout } from '../../../store/reducers/authorizationSlice';
+import { logoutUser } from '../../../store/reducers/authorization/authAsyncThunk';
 
 const LogoutButton = () => {
   const dispatch = useAppDispatch();
 
-  const navigate = useNavigate();
-
   const handleLogout = async () => {
-    try {
-      await logoutUser();
-      dispatch(logout());
-      navigate(RouterRoutes.AUTHORIZATION);
-    } catch (e) {
-      console.log(e);
-    }
+    await dispatch(logoutUser());
   };
 
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
   return (
-    <Tooltip placement="left" title={'Logout'} color="blue">
+    <Tooltip placement="left" title={'Logout'}>
       <Button
         type="primary"
         onClick={handleLogout}

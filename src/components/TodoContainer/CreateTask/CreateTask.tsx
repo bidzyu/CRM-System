@@ -1,36 +1,39 @@
-import { memo } from 'react';
 import { TaskForm } from '../..';
-import { createTodo, fetchTodos } from '../../../api/todos';
+import ShowError from '../../ShowError/ShowError';
+
+import { memo } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
+
+import {
+  createTodo,
+  fetchTodos,
+} from '../../../store/reducers/todos/todosAsyncThunk';
 import {
   createStateTodo,
-  setTodoError,
-  updateStateTodos,
-} from '../../../store/reducers/todosSlice';
-import { getTodosStatus } from '../../../store/selectors/todos';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
-import TaskError from './TaskError/TaskError';
+  removeTodoError,
+} from '../../../store/reducers/todos/todosSlice';
+import { getTodosFilter } from '../../../store/selectors/todos';
 
 export const CreateTask: React.FC = memo(() => {
-  const status = useAppSelector(getTodosStatus);
+  const filter = useAppSelector(getTodosFilter);
+  const error = useAppSelector((state) => state.todos.error);
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (taskText: string) => {
     const text = taskText.trim();
     dispatch(createStateTodo(text));
+    await dispatch(createTodo(text));
+    await dispatch(fetchTodos(filter));
+  };
 
-    try {
-      await createTodo(text);
-      const newTodos = await fetchTodos(status);
-      dispatch(updateStateTodos(newTodos));
-    } catch (e) {
-      dispatch(setTodoError('Неудалось создать задачу, попробуйте позже.'));
-    }
+  const handleRemoveError = () => {
+    dispatch(removeTodoError());
   };
 
   return (
     <>
       <TaskForm handleSubmit={handleSubmit} />
-      <TaskError />
+      <ShowError error={error} removeError={handleRemoveError} />
     </>
   );
 });

@@ -1,5 +1,4 @@
 import { notification, NotificationArgsProps } from 'antd';
-import React from 'react';
 
 type NotificationPlacement = NotificationArgsProps['placement'];
 type ShowNotification = (

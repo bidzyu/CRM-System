@@ -1,38 +1,26 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { TasksItems, CreateTask, TasksFilter } from '../';
-import { fetchTodos } from '../../api/todos';
 import { Flex } from 'antd';
-
+import { TasksItems, CreateTask, TasksFilter } from '../';
+import { useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import {
-  removeTodoError,
-  setTodoError,
-  updateStateTodos,
-} from '../../store/reducers/todosSlice';
-import { getTodosList, getTodosStatus } from '../../store/selectors/todos';
+import { fetchTodos } from '../../store/reducers/todos/todosAsyncThunk';
+import { getTodosList, getTodosFilter } from '../../store/selectors/todos';
 
 const TodoContainer: React.FC = () => {
-  const status = useAppSelector(getTodosStatus);
+  const filter = useAppSelector(getTodosFilter);
   const list = useAppSelector(getTodosList);
   const dispatch = useAppDispatch();
 
   const fetchTimerRef = useRef<number>();
 
   const fetchNewData = useCallback(async () => {
-    try {
-      const data = await fetchTodos(status);
-
-      dispatch(updateStateTodos(data));
-    } catch (e) {
-      dispatch(setTodoError('Неудалось получить данные, попробуйте позже.'));
-    }
-  }, [status]);
+    dispatch(fetchTodos(filter));
+  }, [filter]);
 
   const refetchNewData = useCallback(() => {
     fetchTimerRef.current = setInterval(() => {
       fetchNewData();
     }, 5000);
-  }, [status]);
+  }, [filter]);
 
   const cancelRefetch = () => {
     clearInterval(fetchTimerRef.current);
@@ -49,7 +37,7 @@ const TodoContainer: React.FC = () => {
     refetchNewData();
 
     return () => cancelRefetch();
-  }, [status]);
+  }, [filter]);
 
   return (
     <Flex

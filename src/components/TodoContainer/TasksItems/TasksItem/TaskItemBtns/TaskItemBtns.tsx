@@ -1,6 +1,5 @@
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { Button, Form } from 'antd';
-
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons';
 interface TaskItemBtnsProps {
   changeTask: () => void;
   deleteTask: () => void;

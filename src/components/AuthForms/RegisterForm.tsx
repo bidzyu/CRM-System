@@ -1,41 +1,35 @@
 import { Button, Form } from 'antd';
+import GoLogin from './GoLogin';
+import {
+  MyEmail,
+  MyForm,
+  MyLogin,
+  MyText,
+  MyName,
+  MyPassword,
+  MyConfirmPassword,
+  MyPhone,
+  MySubmit,
+  MyError,
+} from './MyAuthFormItems';
+
 import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+
+import { registerUser } from '../../store/reducers/authorization/authAsyncThunk';
+import { getAuthStatus } from '../../store/selectors/authorization';
+
 import { RouterRoutes } from '../../interfaces/routerRoutes';
+import { LoadingStatus } from '../../interfaces/loadingStatus';
 import { RegisterFormConfirm } from '../../interfaces/authForms';
 import { UserRegistration } from '../../interfaces/authApi';
-import { registerUser } from '../../api/auth';
-import { useState } from 'react';
-import GoLogin from './GoLogin';
-import MyForm from './MyAuthFormItems/MyForm';
-import MyLogin from './MyAuthFormItems/MyLogin';
-import MyText from './MyAuthFormItems/MyText';
-import MyName from './MyAuthFormItems/MyName';
-import MyPassword from './MyAuthFormItems/MyPassword';
-import MyConfirmPassword from './MyAuthFormItems/MyConfirmPassword';
-import MyEmail from './MyAuthFormItems/MyEmail';
-import MyPhone from './MyAuthFormItems/MyPhone';
-import MySubmit from './MyAuthFormItems/MySubmit';
-import MyError from './MyAuthFormItems/MyError';
-
-const getErrorMessage = (status: number) => {
-  if (status === 409) {
-    return `Пользователь с такой Почтой или Логином уже существует.`;
-  }
-
-  if (status === 400) {
-    return 'Ошибка десериализации запроса или неверный ввод.';
-  }
-
-  if (status === 500) {
-    return 'Внутренняя ошибка сервера.';
-  }
-
-  return 'Упс, произошла неизвестная ошибка.';
-};
 
 const RegisterForm = () => {
+  const status = useAppSelector(getAuthStatus);
+  const dispatch = useAppDispatch();
+
   const [error, setError] = useState('');
-  const [isSubmiting, setIsSubmiting] = useState(false);
   const [success, setSuccess] = useState(false);
   const { showNotification } = useOutletContext<any>();
 
@@ -53,16 +47,11 @@ const RegisterForm = () => {
     };
 
     try {
-      setIsSubmiting(true);
-      await registerUser(userData);
-
-      // navigate(RouterRoutes.AUTHORIZATION);
+      await dispatch(registerUser(userData)).unwrap();
       setSuccess(true);
       showNotification('Регистрация прошла успешно!');
     } catch (e: any) {
-      console.log(e);
-      setIsSubmiting(false);
-      setError(getErrorMessage(e.status || 0));
+      setError(e);
     }
   };
 
@@ -89,7 +78,7 @@ const RegisterForm = () => {
       <MySubmit
         value="Зарегистрироваться"
         submitValue="Регистрируем..."
-        isSubmiting={isSubmiting}
+        isSubmiting={status === LoadingStatus.LOADING}
       />
       <Form.Item style={{ marginTop: 50, textAlign: 'center' }}>
         Уже зарегистрированы?

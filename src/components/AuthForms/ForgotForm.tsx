@@ -1,15 +1,9 @@
 import { Button, Form } from 'antd';
+import { MyEmail, MyError, MyForm, MySubmit, MyText } from './MyAuthFormItems';
+import { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { RouterRoutes } from '../../interfaces/routerRoutes';
-import {
-  ForgotFormConfirm,
-} from '../../interfaces/authForms';
-import MyForm from './MyAuthFormItems/MyForm';
-import MyText from './MyAuthFormItems/MyText';
-import MySubmit from './MyAuthFormItems/MySubmit';
-import { useState } from 'react';
-import MyEmail from './MyAuthFormItems/MyEmail';
-import MyError from './MyAuthFormItems/MyError';
+import { ForgotFormConfirm } from '../../interfaces/authForms';
 
 const ForgotForm = () => {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -57,20 +51,6 @@ const ForgotForm = () => {
         </Button>
       </Form.Item>
     </MyForm>
-
-    // <Form
-    //   name="forgot"
-    //   style={{
-    //     maxWidth: 400,
-    //     width: '100%',
-    //     maxHeight: 600,
-    //     height: '100%',
-    //   }}
-    //   initialValues={{ remember: true }}
-    //   onFinish={onFinish}
-    // >
-
-    // </Form>
   );
 };
 
