@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getAccessToken, hasRefreshToken } from '../helpers/handleAuthToken';
 import { refreshUserToken } from '../store/reducers/authorization/authAsyncThunk';
+import { logoutStateUser } from '../store/reducers/authorization/authSlice';
 import type { Store } from '../store/store';
 import { BASE_URL } from './config';
 
@@ -56,6 +57,8 @@ export const AxiosInterceptors = {
           const newAccessToken = getAccessToken();
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return api(originalRequest);
+        } else if (error.response && error.response.status === 401) {
+          dispatch(logoutStateUser());
         }
 
         return Promise.reject(error);

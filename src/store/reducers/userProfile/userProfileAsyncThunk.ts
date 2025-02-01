@@ -42,7 +42,6 @@ export const resetUserPassword = createAsyncThunk(
   async (password: PasswordRequest, thunkApi) => {
     try {
       await api.put<PasswordRequest>('/user/profile/reset-password', password);
-      // removeAuthTokens();
     } catch (e: any) {
       return thunkApi.rejectWithValue(e.message);
     }

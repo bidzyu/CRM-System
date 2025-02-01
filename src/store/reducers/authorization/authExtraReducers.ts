@@ -29,6 +29,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<Authorization>) {
   });
   builder.addCase(logoutUser.rejected, (state) => {
     state.loading = LoadingStatus.FAIL;
+    state.isLogged = false;
   });
 
   builder.addCase(refreshUserToken.pending, (state) => {
@@ -38,7 +39,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<Authorization>) {
     state.loading = LoadingStatus.SUCCESS;
     state.isLogged = true;
   });
-  builder.addCase(refreshUserToken.rejected, (state) => {
+  builder.addCase(refreshUserToken.rejected, (state, { payload, error }) => {
     state.loading = LoadingStatus.FAIL;
     state.isLogged = false;
   });

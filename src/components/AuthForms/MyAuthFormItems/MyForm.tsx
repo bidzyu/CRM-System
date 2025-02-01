@@ -30,6 +30,7 @@ const MyForm: React.FC<FormProps> = ({
       <Flex align={'center'}>
         <div style={{ height: '100vh', width: '60%' }}>
           <img
+            loading="lazy"
             src={illustration}
             alt="authIllustration"
             style={{

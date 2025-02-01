@@ -26,7 +26,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<UserProfile>) {
     state.user = payload;
     state.loading = LoadingStatus.SUCCESS;
   });
-  builder.addCase(updateUserProfile.rejected, (state) => {
+  builder.addCase(updateUserProfile.rejected, (state, { payload, error }) => {
     state.loading = LoadingStatus.FAIL;
   });
 
