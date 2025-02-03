@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import { useMyNotification } from '../../hooks/useMyNotification';
 import { useAppSelector } from '../../store/store';
 
-import { hasRefreshToken } from '../../helpers/handleAuthToken';
+import { authToken } from '../../api/AuthToken';
 import {
   getAuthIsLogged,
   getAuthStatus,
@@ -18,7 +18,7 @@ import { RouterRoutes } from '../../interfaces/routerRoutes';
 const AuthLayout: React.FC = (): React.ReactElement => {
   const isLogged = useAppSelector(getAuthIsLogged);
   const status = useAppSelector(getAuthStatus);
-  const firstRecconRef = useRef(hasRefreshToken());
+  const firstRecconRef = useRef(authToken.hasRefresh());
 
   const [showNotification, notificationHolder] = useMyNotification();
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { api } from '../../../api/axiosConfig';
+import { appApi } from '../../../api/AppApi';
 import {
   Todo,
   TodoInfo,
@@ -8,13 +8,12 @@ import {
   TodoRequest,
   UpdateParams,
 } from '../../../interfaces/todosApi';
-import { AxiosResponse } from 'axios';
 
 export const fetchTodos = createAsyncThunk(
   'todos/fetchTodos',
   async (filter: TodoFilterStatus, thunkApi) => {
     try {
-      const response = await api.get<MetaResponse<Todo, TodoInfo>>(
+      const response = await appApi.get<MetaResponse<Todo, TodoInfo>>(
         `/todos?filter=${filter}`
       );
 
@@ -33,7 +32,7 @@ export const createTodo = createAsyncThunk(
         title,
       };
 
-      await api.post<TodoRequest, AxiosResponse<Todo>>('/todos', todo);
+      await appApi.post<TodoRequest, Todo>('/todos', todo);
     } catch (e: any) {
       return thunkApi.rejectWithValue(e.message);
     }
@@ -51,10 +50,7 @@ export const updateTodo = createAsyncThunk(
         isDone,
       };
 
-      await api.put<TodoRequest, AxiosResponse<Todo>>(
-        `/todos/${id}`,
-        updatedTodo
-      );
+      await appApi.put<TodoRequest, Todo>(`/todos/${id}`, updatedTodo);
     } catch (e: any) {
       return thunkApi.rejectWithValue(e.message);
     }
@@ -64,7 +60,7 @@ export const deleteTodo = createAsyncThunk(
   'todos/deleteTodo',
   async (id: number, thunkApi) => {
     try {
-      await api.delete<AxiosResponse<Todo>>(`/todos/${id}`);
+      await appApi.delete<Todo>(`/todos/${id}`);
     } catch (e: any) {
       return thunkApi.rejectWithValue(e.message);
     }

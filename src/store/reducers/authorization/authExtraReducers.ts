@@ -5,6 +5,7 @@ import {
   refreshUserToken,
   registerUser,
 } from './authAsyncThunk';
+import { authToken } from '../../../api/AuthToken';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
 import { Authorization } from './authSlice';
 
@@ -12,9 +13,10 @@ export function extraReducers(builder: ActionReducerMapBuilder<Authorization>) {
   builder.addCase(loginUser.pending, (state) => {
     state.loading = LoadingStatus.LOADING;
   });
-  builder.addCase(loginUser.fulfilled, (state) => {
+  builder.addCase(loginUser.fulfilled, (state, { payload }) => {
     state.loading = LoadingStatus.SUCCESS;
     state.isLogged = true;
+    authToken.save(payload);
   });
   builder.addCase(loginUser.rejected, (state) => {
     state.loading = LoadingStatus.FAIL;
@@ -26,6 +28,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<Authorization>) {
   builder.addCase(logoutUser.fulfilled, (state) => {
     state.loading = LoadingStatus.SUCCESS;
     state.isLogged = false;
+    authToken.remove();
   });
   builder.addCase(logoutUser.rejected, (state) => {
     state.loading = LoadingStatus.FAIL;
@@ -35,13 +38,15 @@ export function extraReducers(builder: ActionReducerMapBuilder<Authorization>) {
   builder.addCase(refreshUserToken.pending, (state) => {
     state.loading = LoadingStatus.LOADING;
   });
-  builder.addCase(refreshUserToken.fulfilled, (state) => {
+  builder.addCase(refreshUserToken.fulfilled, (state, { payload }) => {
     state.loading = LoadingStatus.SUCCESS;
     state.isLogged = true;
+    authToken.save(payload);
   });
-  builder.addCase(refreshUserToken.rejected, (state, { payload, error }) => {
+  builder.addCase(refreshUserToken.rejected, (state) => {
     state.loading = LoadingStatus.FAIL;
     state.isLogged = false;
+    authToken.remove();
   });
 
   builder.addCase(registerUser.pending, (state) => {

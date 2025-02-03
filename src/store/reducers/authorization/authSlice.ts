@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { extraReducers } from './authExtraReducers';
+import { authToken } from '../../../api/AuthToken';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
-import { removeAuthTokens } from '../../../helpers/handleAuthToken';
 
 export interface Authorization {
   isLogged: boolean;
@@ -19,7 +19,7 @@ const authorizationSlice = createSlice({
   reducers: {
     logoutStateUser: (state) => {
       state.isLogged = false;
-      removeAuthTokens();
+      authToken.remove();
     },
   },
   extraReducers,
