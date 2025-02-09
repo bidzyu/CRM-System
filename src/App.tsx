@@ -1,14 +1,8 @@
-import AuthReconnector from './components/AuthReconnector/AuthReconnector';
 import AppRouter from './router/AppRouter';
 import './App.scss';
 
 const App: React.FC = () => {
-  return (
-    <>
-      <AppRouter />
-      <AuthReconnector />
-    </>
-  );
+  return <AppRouter />;
 };
 
 export default App;

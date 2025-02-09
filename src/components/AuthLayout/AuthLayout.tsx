@@ -14,10 +14,10 @@ import {
 
 import { LoadingStatus } from '../../interfaces/loadingStatus';
 import { RouterRoutes } from '../../interfaces/routerRoutes';
+import { useAuthReconnector } from '../../hooks/useAuthReconnector';
 
 const AuthLayout: React.FC = (): React.ReactElement => {
-  const isLogged = useAppSelector(getAuthIsLogged);
-  const status = useAppSelector(getAuthStatus);
+  const { isLogged, status } = useAuthReconnector();
   const firstRecconRef = useRef(authToken.hasRefresh());
 
   const [showNotification, notificationHolder] = useMyNotification();

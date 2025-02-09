@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { appApi } from '../../../api/AppApi';
+import { api, noInterceptApi } from '../../../api/AppApi';
 import { authToken } from '../../../api/AuthToken';
 import {
   getLoginErrorMessage,
@@ -12,12 +12,13 @@ import type {
   Profile,
   UserRegistration,
 } from '../../../interfaces/authApi';
+import { AxiosResponse } from 'axios';
 
 export const loginUser = createAsyncThunk(
   'authorization/loginUser',
   async (credentials: AuthData, thunkApi) => {
     try {
-      const data = await appApi.post<AuthData, Token>(
+      const data = await noInterceptApi.post<AuthData, AxiosResponse<Token>>(
         '/auth/signin',
         credentials
       );
@@ -33,7 +34,7 @@ export const logoutUser = createAsyncThunk(
   'authorization/logoutUser',
   async (_, thunkApi) => {
     try {
-      await appApi.post('/user/logout');
+      await api.post('/user/logout');
     } catch (e: any) {
       return thunkApi.rejectWithValue(e.message);
     }
@@ -53,10 +54,10 @@ export const refreshUserToken = createAsyncThunk(
         refreshToken: refToken,
       } as RefreshToken;
 
-      const respData = await appApi.noInterceptPost<RefreshToken, Token>(
-        '/auth/refresh',
-        data
-      );
+      const respData = await noInterceptApi.post<
+        RefreshToken,
+        AxiosResponse<Token>
+      >('/auth/refresh', data);
       const tokens = respData.data;
       return tokens;
     } catch (e: any) {
@@ -69,7 +70,10 @@ export const registerUser = createAsyncThunk(
   'registration/registerUser',
   async (userData: UserRegistration, thunkApi) => {
     try {
-      await appApi.post<UserRegistration, Profile>('/auth/signup', userData);
+      await noInterceptApi.post<UserRegistration, Profile>(
+        '/auth/signup',
+        userData
+      );
     } catch (e: any) {
       return thunkApi.rejectWithValue(getRegisterErrorMessage(e.status));
     }

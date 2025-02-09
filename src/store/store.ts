@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import authorization from './reducers/authorization/authSlice';
 import todos from './reducers/todos/todosSlice';
 import userProfile from './reducers/userProfile/userProfileSlice';
-import { appApi } from '../api/AppApi';
+import { AxiosInterceptors } from '../api/AppApi';
 
 const rootReducer = combineReducers({
   userProfile,
@@ -22,4 +22,4 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = (() => useDispatch)();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-appApi.setup(store);
+AxiosInterceptors.setup(store);

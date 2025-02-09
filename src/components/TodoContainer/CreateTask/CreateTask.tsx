@@ -8,11 +8,8 @@ import {
   createTodo,
   fetchTodos,
 } from '../../../store/reducers/todos/todosAsyncThunk';
-import {
-  createStateTodo,
-  removeTodoError,
-} from '../../../store/reducers/todos/todosSlice';
 import { getTodosFilter } from '../../../store/selectors/todos';
+import { removeTodoError } from '../../../store/reducers/todos/todosSlice';
 
 export const CreateTask: React.FC = memo(() => {
   const filter = useAppSelector(getTodosFilter);
@@ -21,7 +18,6 @@ export const CreateTask: React.FC = memo(() => {
 
   const handleSubmit = async (taskText: string) => {
     const text = taskText.trim();
-    dispatch(createStateTodo(text));
     await dispatch(createTodo(text));
     await dispatch(fetchTodos(filter));
   };

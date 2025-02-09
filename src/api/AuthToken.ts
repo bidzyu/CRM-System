@@ -1,48 +1,46 @@
 import { Token } from '../interfaces/authApi';
 
-enum AuthTokens {
-  ACCESS = 'accessToken',
-  REFRESH = 'refreshToken',
-}
-
 class AuthToken {
-  private access: string | null;
-  private refresh: string | null;
+  private ACCESS: 'accessToken' = 'accessToken';
+  private REFRESH: 'refreshToken' = 'refreshToken';
+  private accessToken: string | null;
+  private refreshToken: string | null;
 
   constructor() {
-    this.access = localStorage.getItem(AuthTokens.ACCESS);
-    this.refresh = localStorage.getItem(AuthTokens.REFRESH);
+    this.accessToken = localStorage.getItem(this.ACCESS);
+    this.refreshToken = localStorage.getItem(this.REFRESH);
   }
 
   save(tokens: Token) {
-    localStorage.setItem(AuthTokens.ACCESS, tokens[AuthTokens.ACCESS]);
-    localStorage.setItem(AuthTokens.REFRESH, tokens[AuthTokens.REFRESH]);
-    this.access = tokens[AuthTokens.ACCESS];
-    this.refresh = tokens[AuthTokens.REFRESH];
+    localStorage.setItem(this.ACCESS, tokens.accessToken);
+    localStorage.setItem(this.REFRESH, tokens.refreshToken);
+    this.accessToken = tokens.accessToken;
+    this.refreshToken = tokens.refreshToken;
   }
 
   remove() {
-    localStorage.removeItem(AuthTokens.ACCESS);
-    localStorage.removeItem(AuthTokens.REFRESH);
-    this.access = null;
-    this.refresh = null;
+    localStorage.removeItem(this.ACCESS);
+    localStorage.removeItem(this.REFRESH);
+    this.accessToken = null;
+    this.refreshToken = null;
   }
 
   getAccess() {
-    return this.access;
+    return this.accessToken;
   }
 
   getRefresh() {
-    return this.refresh;
+    return this.refreshToken;
   }
   hasAccess() {
-    return !!this.access;
+    return !!this.accessToken;
   }
 
   hasRefresh() {
-    return !!this.refresh;
+    return !!this.refreshToken;
   }
 }
+
 export const authToken = new AuthToken();
 
 // export class AuthToken {

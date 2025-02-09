@@ -10,12 +10,12 @@ import {
 } from '../../store/selectors/authorization';
 import { RouterRoutes } from '../../interfaces/routerRoutes';
 import { LoadingStatus } from '../../interfaces/loadingStatus';
+import { useAuthReconnector } from '../../hooks/useAuthReconnector';
 
 const { Content, Sider } = Layout;
 
 const AppLayout: React.FC = () => {
-  const isLogged = useAppSelector(getAuthIsLogged);
-  const status = useAppSelector(getAuthStatus);
+  const { isLogged, status } = useAuthReconnector();
   const location = useLocation();
 
   const {

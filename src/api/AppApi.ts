@@ -1,13 +1,12 @@
-import axios, {
-  AxiosInstance,
-  AxiosResponse,
-  CreateAxiosDefaults,
-} from 'axios';
+import axios, { CreateAxiosDefaults } from 'axios';
 import { authToken } from './AuthToken';
 import { refreshUserToken } from '../store/reducers/authorization/authAsyncThunk';
 import { logoutStateUser } from '../store/reducers/authorization/authSlice';
 import { Store } from '../store/store';
-import { BASE_URL } from './config';
+
+const BASE_DOMAIN = 'https://easydev.club';
+const API_VERSION = '/api/v1';
+const BASE_URL = BASE_DOMAIN + API_VERSION;
 
 const BASE_AXIOS_CONFIG: CreateAxiosDefaults = {
   baseURL: BASE_URL,
@@ -18,37 +17,12 @@ const BASE_AXIOS_CONFIG: CreateAxiosDefaults = {
   },
 };
 
-class AppApi {
-  private api: AxiosInstance;
-  private noInterceptApi: AxiosInstance;
+export const api = axios.create(BASE_AXIOS_CONFIG);
+export const noInterceptApi = axios.create(BASE_AXIOS_CONFIG);
 
-  constructor(axiosConfig: CreateAxiosDefaults) {
-    this.api = axios.create(axiosConfig);
-    this.noInterceptApi = axios.create(axiosConfig);
-  }
-
-  get<T>(endpoint: string) {
-    return this.api.get<T>(endpoint);
-  }
-
-  post<T, R>(endpoint: string, data?: T) {
-    return this.api.post<T, AxiosResponse<R>>(endpoint, data);
-  }
-
-  put<T, R>(endpoint: string, data: T) {
-    return this.api.put<T, AxiosResponse<R>>(endpoint, data);
-  }
-
-  delete<R>(endpoint: string) {
-    return this.api.delete<AxiosResponse<R>>(endpoint);
-  }
-
-  noInterceptPost<T, R>(endpoint: string, data: T) {
-    return this.noInterceptApi.post<T, AxiosResponse<R>>(endpoint, data);
-  }
-
+export const AxiosInterceptors = {
   setup(store: Store) {
-    this.api.interceptors.request.use(
+    api.interceptors.request.use(
       (config) => {
         if (authToken.hasAccess()) {
           config.headers.Authorization = `Bearer ${authToken.getAccess()}`;
@@ -59,7 +33,7 @@ class AppApi {
         return Promise.reject(err);
       }
     );
-    this.api.interceptors.response.use(
+    api.interceptors.response.use(
       (response) => response,
       async (error) => {
         const originalRequest = error.config;
@@ -78,13 +52,11 @@ class AppApi {
 
           const newAccessToken = authToken.getAccess();
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          return this.api(originalRequest);
+          return api(originalRequest);
         }
 
         return Promise.reject(error);
       }
     );
-  }
-}
-
-export const appApi = new AppApi(BASE_AXIOS_CONFIG);
+  },
+};

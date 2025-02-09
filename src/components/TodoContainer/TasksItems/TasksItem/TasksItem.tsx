@@ -7,10 +7,6 @@ import { useEffect, useRef, useState, memo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../../store/store';
 
 import {
-  deleteStateTodo,
-  updateStateTodo,
-} from '../../../../store/reducers/todos/todosSlice';
-import {
   updateTodo,
   deleteTodo,
   fetchTodos,
@@ -28,7 +24,7 @@ const listStyle: React.CSSProperties = { display: 'block', width: '100%' };
 type TasksItemProps = Todo;
 
 export const TasksItem: React.FC<TasksItemProps> = memo(
-  ({ title, isDone, id, created }) => {
+  ({ title, isDone, id }) => {
     const filter = useAppSelector(getTodosFilter);
     const dispatch = useAppDispatch();
 
@@ -48,16 +44,6 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
       focusTextField();
     };
 
-    const updateStateTask = (text?: string, done?: boolean) => {
-      const updatedTodo: Todo = {
-        title: text || title,
-        created,
-        id,
-        isDone: typeof done === 'boolean' ? done : isDone,
-      };
-      dispatch(updateStateTodo(updatedTodo));
-    };
-
     const updateTasks = async () => {
       return await dispatch(fetchTodos(filter));
     };
@@ -73,8 +59,6 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
     };
 
     const handleDeleteTask = async () => {
-      dispatch(deleteStateTodo(id));
-
       await dispatch(deleteTodo(id));
       await updateTasks();
     };
@@ -84,7 +68,6 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
       const itemText: string = form.getFieldValue(String(id)).trim();
 
       if (itemText && title !== itemText) {
-        updateStateTask(itemText);
         await updateTask(itemText);
         await updateTasks();
       }
@@ -106,8 +89,6 @@ export const TasksItem: React.FC<TasksItemProps> = memo(
           return;
         }
         const itemText = form.getFieldValue(String(id));
-        updateStateTask(title, isChecked);
-
         await updateTask(itemText);
         await updateTasks();
       })();

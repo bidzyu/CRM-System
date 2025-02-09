@@ -13,12 +13,12 @@ const initialState: UserProfile = {
   loading: LoadingStatus.INITIAL,
 };
 
-const userProfile = createSlice({
+const userProfileSlice = createSlice({
   name: 'userProfile',
   initialState,
   reducers: {},
   extraReducers,
 });
 
-export default userProfile.reducer;
-// export const { setUserProfile, updateUserProfile } = userProfile.actions;
+export default userProfileSlice.reducer;
+// export const { setUserProfile, updateUserProfile } = userProfileSlice.actions;
