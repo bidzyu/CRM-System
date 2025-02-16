@@ -1,0 +1,10 @@
+export { default as MyConfirmPassword } from './MyConfirmPassword';
+export { default as MyEmail } from './MyEmail';
+export { default as MyError } from './MyError';
+export { default as MyForm } from './MyForm';
+export { default as MyLogin } from './MyLogin';
+export { default as MyName } from './MyName';
+export { default as MyPassword } from './MyPassword';
+export { default as MyPhone } from './MyPhone';
+export { default as MySubmit } from './MySubmit';
+export { default as MyText } from './MyText';

@@ -1,9 +1,9 @@
-export { CreateTask } from './CreateTask/CreateTask';
-export { TaskForm } from './TaskForm/TaskForm';
-export { TasksFilter } from './TasksFilter/TasksFilter';
-export { TasksItem } from './TasksItem/TasksItem';
-export { TaskItemText } from './TaskItemText/TaskItemText';
-export { TaskItemBtns } from './TaskItemBtns/TaskItemBtns';
-export { TaskItemEditingBtns } from './TaskItemBtns/TaskItemEditingBtns';
-export { TasksItems } from './TasksItems/TasksItems';
+export { CreateTask } from './TodoContainer/CreateTask/CreateTask';
+export { TaskForm } from './TodoContainer/CreateTask/TaskForm/TaskForm';
+export { TasksFilter } from './TodoContainer/TasksFilter/TasksFilter';
+export { TasksItem } from './TodoContainer/TasksItems/TasksItem/TasksItem';
+export { TaskItemText } from './TodoContainer/TasksItems/TasksItem/TaskItemText/TaskItemText';
+export { TaskItemBtns } from './TodoContainer/TasksItems/TasksItem/TaskItemBtns/TaskItemBtns';
+export { TaskItemEditingBtns } from './TodoContainer/TasksItems/TasksItem/TaskItemBtns/TaskItemEditingBtns';
+export { TasksItems } from './TodoContainer/TasksItems/TasksItems';
 export { AppMenu } from './AppMenu/AppMenu';
