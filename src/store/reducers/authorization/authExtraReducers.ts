@@ -7,9 +7,11 @@ import {
 } from './authAsyncThunk';
 import { authToken } from '../../../api/AuthToken';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
-import { Authorization } from './authSlice';
+import { AuthorizationState } from './authSlice';
 
-export function extraReducers(builder: ActionReducerMapBuilder<Authorization>) {
+export function extraReducers(
+  builder: ActionReducerMapBuilder<AuthorizationState>
+) {
   builder.addCase(loginUser.pending, (state) => {
     state.loading = LoadingStatus.LOADING;
   });

@@ -1,14 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { extraReducers } from './userProfileExtraReducers';
-import { Profile } from '../../../interfaces/authApi';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
-
-export interface UserProfile {
-  user: Profile | null;
+import type { UserProfile } from '../../../interfaces/userRoles';
+export interface UserProfileState {
+  user: UserProfile | null;
   loading: LoadingStatus;
 }
 
-const initialState: UserProfile = {
+const initialState: UserProfileState = {
   user: null,
   loading: LoadingStatus.INITIAL,
 };
@@ -16,9 +15,14 @@ const initialState: UserProfile = {
 const userProfileSlice = createSlice({
   name: 'userProfile',
   initialState,
-  reducers: {},
+  reducers: {
+    clearStateUserInfo(state) {
+      state.user = null;
+      state.loading = LoadingStatus.INITIAL;
+    },
+  },
   extraReducers,
 });
 
 export default userProfileSlice.reducer;
-// export const { setUserProfile, updateUserProfile } = userProfileSlice.actions;
+export const { clearStateUserInfo } = userProfileSlice.actions;

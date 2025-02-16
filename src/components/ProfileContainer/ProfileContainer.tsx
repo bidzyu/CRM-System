@@ -3,7 +3,7 @@ import LogoutButton from './LogoutButton/LogoutButton';
 import ProfileInfo from './ProfileInfo/ProfileInfo';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import { fetchUserProfile } from '../../store/reducers/userProfile/userProfileAsyncThunk';
+import { fetchUserProfile, updateUserProfile } from '../../store/reducers/userProfile/userProfileAsyncThunk';
 import ShowError from '../ShowError/ShowError';
 
 const ProfileContainer = () => {
@@ -28,7 +28,7 @@ const ProfileContainer = () => {
   useEffect(() => {
     fetchNewUser();
   }, []);
-
+  
   return (
     <>
       <LogoutButton />
@@ -37,7 +37,7 @@ const ProfileContainer = () => {
         <Typography.Title style={{ margin: '30px auto 50px' }} level={1}>
           Привет{user && ` ${user.username}`}!
         </Typography.Title>
-        {user && <ProfileInfo />}
+        {user && <ProfileInfo user={user} profileUpdater={updateUserProfile}/>}
       </Flex>
     </>
   );

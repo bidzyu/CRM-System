@@ -9,7 +9,7 @@ import {
 } from '../../../interfaces/todosApi';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
 
-export interface Todos {
+export interface TodosState {
   list: Todo[];
   info: TodoInfo | undefined;
   total: number;
@@ -18,7 +18,7 @@ export interface Todos {
   error: string | undefined;
 }
 
-const initialState: Todos = {
+const initialState: TodosState = {
   list: [],
   info: undefined,
   total: 0,

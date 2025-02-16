@@ -3,12 +3,12 @@ import { extraReducers } from './authExtraReducers';
 import { authToken } from '../../../api/AuthToken';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
 
-export interface Authorization {
+export interface AuthorizationState {
   isLogged: boolean;
   loading: LoadingStatus;
 }
 
-const initialState: Authorization = {
+const initialState: AuthorizationState = {
   isLogged: false,
   loading: LoadingStatus.INITIAL,
 };

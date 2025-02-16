@@ -1,0 +1,58 @@
+// Интерфейс запроса для фильтрации и сортировки пользователей
+export interface UserFilters {
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  limit: number; // сколько на странице
+  offset: number; // страницу
+  search?: string;
+  isBlocked?: boolean;
+}
+
+// Интерфейс пользователя
+export interface UserProfile {
+  id: number;
+  username: string;
+  email: string;
+  date: string; // ISO date string
+  isBlocked: boolean;
+  roles: UserRoles[];
+  phoneNumber: string;
+}
+
+export interface UserPasswordRequest {
+  password: string;
+}
+// Интерфейс метаинформации
+
+export interface MetaResponse<T> {
+  data: T[];
+  meta: {
+    totalAmount: number;
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+  };
+}
+// Интерфейс для обновления прав пользователя
+export interface UserRolesRequest {
+  roles: UserRoles[]; // при вызове этой апи роли будут обновлены к тому массиву который будет передан
+  // например если у вас была roles: ['ADMIN'] а вы хотите добавить ['MODERATOR'] то нужно передавать
+  // старые + новые - roles: ['ADMIN', 'MODERATOR']
+}
+
+// Интерфейс для обновления данных пользователя
+export interface UserRequest {
+  username?: string;
+  email?: string;
+  phoneNumber?: string;
+}
+
+export interface UpdateUserParams {
+  requestData: UserRequest;
+  id?: string;
+}
+
+export enum UserRoles {
+  ADMIN = 'ADMIN',
+  MODERATOR = 'MODERATOR',
+  USER = 'USER',
+}
