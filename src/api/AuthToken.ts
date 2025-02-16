@@ -1,26 +1,26 @@
 import { Token } from '../interfaces/authApi';
 
 class AuthToken {
-  private ACCESS: 'accessToken' = 'accessToken';
-  private REFRESH: 'refreshToken' = 'refreshToken';
+  private ACCESS_KEY: 'accessToken' = 'accessToken';
+  private REFRESH_KEY: 'refreshToken' = 'refreshToken';
   private accessToken: string | null;
   private refreshToken: string | null;
 
   constructor() {
-    this.accessToken = localStorage.getItem(this.ACCESS);
-    this.refreshToken = localStorage.getItem(this.REFRESH);
+    this.accessToken = localStorage.getItem(this.ACCESS_KEY);
+    this.refreshToken = localStorage.getItem(this.REFRESH_KEY);
   }
 
   save(tokens: Token) {
-    localStorage.setItem(this.ACCESS, tokens.accessToken);
-    localStorage.setItem(this.REFRESH, tokens.refreshToken);
+    localStorage.setItem(this.ACCESS_KEY, tokens.accessToken);
+    localStorage.setItem(this.REFRESH_KEY, tokens.refreshToken);
     this.accessToken = tokens.accessToken;
     this.refreshToken = tokens.refreshToken;
   }
 
   remove() {
-    localStorage.removeItem(this.ACCESS);
-    localStorage.removeItem(this.REFRESH);
+    localStorage.removeItem(this.ACCESS_KEY);
+    localStorage.removeItem(this.REFRESH_KEY);
     this.accessToken = null;
     this.refreshToken = null;
   }
