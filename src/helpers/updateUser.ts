@@ -1,11 +1,11 @@
-import { Profile, ProfileRequest } from '../interfaces/authApi';
+import { UserProfile, UserRequest } from '../interfaces/userRoles';
 import { UserFieldType } from '../interfaces/authForms';
 
 export const getUpdatedUserFields = (
-  user: Profile,
+  user: UserProfile,
   field: UserFieldType
-): ProfileRequest => {
-  const profile: ProfileRequest = {};
+): UserRequest => {
+  const profile: UserRequest = {};
 
   if (user.email.trim() !== field.email.trim()) {
     profile.email = field.email.trim();
@@ -20,7 +20,7 @@ export const getUpdatedUserFields = (
   return profile;
 };
 
-export const shouldUserUpdate = (user: Profile, field: UserFieldType) => {
+export const shouldUserUpdate = (user: UserProfile, field: UserFieldType) => {
   return (
     user.email.trim() !== field.email.trim() ||
     user.username.trim() !== field.name.trim() ||

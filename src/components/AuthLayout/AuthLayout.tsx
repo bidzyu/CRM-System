@@ -4,31 +4,29 @@ import ReconnectSpin from '../ReconnectSpin/ReconnectSpin';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useRef } from 'react';
 import { useMyNotification } from '../../hooks/useMyNotification';
-import { useAppSelector } from '../../store/store';
-
 import { authToken } from '../../api/AuthToken';
-import {
-  getAuthIsLogged,
-  getAuthStatus,
-} from '../../store/selectors/authorization';
 
 import { LoadingStatus } from '../../interfaces/loadingStatus';
 import { RouterRoutes } from '../../interfaces/routerRoutes';
 import { useAuthReconnector } from '../../hooks/useAuthReconnector';
 
 const AuthLayout: React.FC = (): React.ReactElement => {
-  const { isLogged, status } = useAuthReconnector();
+  const { isLogged, loginStatus, profile, profileStatus } =
+    useAuthReconnector();
   const firstRecconRef = useRef(authToken.hasRefresh());
 
   const [showNotification, notificationHolder] = useMyNotification();
 
-  if (isLogged) {
+  if (isLogged && profile) {
     return <Navigate to={RouterRoutes.TODOS} replace />;
   } else {
-    if (status === LoadingStatus.INITIAL) {
+    if (
+      loginStatus === LoadingStatus.INITIAL ||
+      profileStatus === LoadingStatus.LOADING
+    ) {
       return <ReconnectSpin />;
     }
-    if (status === LoadingStatus.LOADING && firstRecconRef.current) {
+    if (loginStatus === LoadingStatus.LOADING && firstRecconRef.current) {
       firstRecconRef.current = false;
       return <ReconnectSpin />;
     }

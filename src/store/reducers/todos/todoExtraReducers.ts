@@ -6,10 +6,10 @@ import {
   deleteTodo,
   updateTodo,
 } from './todosAsyncThunk';
-import { Todos } from './todosSlice';
+import { TodosState } from './todosSlice';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
 
-export function extraReducers(builder: ActionReducerMapBuilder<Todos>) {
+export function extraReducers(builder: ActionReducerMapBuilder<TodosState>) {
   builder.addCase(fetchTodos.pending, (state) => {
     state.status = LoadingStatus.LOADING;
     state.error = undefined;

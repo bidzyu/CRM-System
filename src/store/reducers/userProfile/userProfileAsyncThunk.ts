@@ -2,17 +2,18 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getUserUpdateErrorMessage } from '../../../helpers/getErrorMessage';
 import { api } from '../../../api/AppApi';
 import type {
-  PasswordRequest,
-  ProfileRequest,
-  Profile,
-} from '../../../interfaces/authApi';
+  UserProfile,
+  UserRequest,
+  UserPasswordRequest,
+  UpdateUserParams,
+} from '../../../interfaces/userRoles';
 import { AxiosResponse } from 'axios';
 
 export const fetchUserProfile = createAsyncThunk(
   'userProfile/fetchUserProfile',
   async (_, thunkApi) => {
     try {
-      const resp = await api.get<Profile>('/user/profile');
+      const resp = await api.get<UserProfile>('/user/profile');
       return resp.data;
     } catch (e: any) {
       return thunkApi.rejectWithValue(
@@ -24,11 +25,11 @@ export const fetchUserProfile = createAsyncThunk(
 
 export const updateUserProfile = createAsyncThunk(
   'userProfile/updateUserProfile',
-  async (changes: ProfileRequest, thunkApi) => {
+  async ({ requestData }: UpdateUserParams, thunkApi) => {
     try {
-      const resp = await api.put<ProfileRequest, AxiosResponse<Profile>>(
+      const resp = await api.put<UserRequest, AxiosResponse<UserProfile>>(
         '/user/profile',
-        changes
+        requestData
       );
       return resp.data;
     } catch (e: any) {
@@ -39,9 +40,12 @@ export const updateUserProfile = createAsyncThunk(
 
 export const resetUserPassword = createAsyncThunk(
   'userProfile/resetUserPassword',
-  async (password: PasswordRequest, thunkApi) => {
+  async (password: UserPasswordRequest, thunkApi) => {
     try {
-      await api.put<PasswordRequest>('/user/profile/reset-password', password);
+      await api.put<UserPasswordRequest>(
+        '/user/profile/reset-password',
+        password
+      );
     } catch (e: any) {
       return thunkApi.rejectWithValue(e.message);
     }

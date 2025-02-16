@@ -1,8 +1,23 @@
 import { Flex } from 'antd';
 import EditInfo from './EditInfo';
 import { useState } from 'react';
+import {
+  UpdateUserParams,
+  UserProfile,
+  UserRequest,
+} from '../../../interfaces/userRoles';
 
-const ProfileInfo: React.FC = () => {
+export interface ProfileInfoProps {
+  user: UserProfile;
+  profileUpdater: (updateParams: UpdateUserParams) => any;
+  dataUpdater?: () => any;
+}
+
+const ProfileInfo: React.FC<ProfileInfoProps> = ({
+  user,
+  profileUpdater,
+  dataUpdater,
+}) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const toggleEdit = () => {
@@ -21,7 +36,13 @@ const ProfileInfo: React.FC = () => {
       vertical
       gap={15}
     >
-      <EditInfo isEdit={isEdit} toggleEdit={toggleEdit} />
+      <EditInfo
+        isEdit={isEdit}
+        user={user}
+        profileUpdater={profileUpdater}
+        toggleEdit={toggleEdit}
+        dataUpdater={dataUpdater}
+      />
     </Flex>
   );
 };
