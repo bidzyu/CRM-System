@@ -8,6 +8,8 @@ import type {
   UserProfile,
   UserRequest,
   UpdateUserParams,
+  UserRolesRequest,
+  UpdateUserRoles,
 } from '../../../interfaces/userRoles';
 import { RootState } from '../../store';
 
@@ -29,7 +31,7 @@ export const fetchUsers = createAsyncThunk(
     } catch (e: any) {
       console.log(e);
       return thunkApi.rejectWithValue(
-        e.message || 'An error occurred while fetching users, try later again.'
+        e.message || 'An error occurred while fetching users, try again later.'
       );
     }
   }
@@ -45,7 +47,7 @@ export const fetchUser = createAsyncThunk(
       return data;
     } catch (e: any) {
       return thunkApi.rejectWithValue(
-        e.message || 'An error occurred while fetching user, try later again.'
+        e.message || 'An error occurred while fetching user, try again later.'
       );
     }
   }
@@ -63,7 +65,7 @@ export const blockUser = createAsyncThunk(
       return data;
     } catch (e: any) {
       return thunkApi.rejectWithValue(
-        e.message || 'An error occurred while blocking user, try later again.'
+        e.message || 'An error occurred while blocking user, try again later.'
       );
     }
   }
@@ -81,7 +83,20 @@ export const unblockUser = createAsyncThunk(
       return data;
     } catch (e: any) {
       return thunkApi.rejectWithValue(
-        e.message || 'An error occurred while unblocking user, try later again.'
+        e.message || 'An error occurred while unblocking user, try again later'
+      );
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  'usersAdmin/deleteUser',
+  async (id: string, thunkApi) => {
+    try {
+      await api.delete(`/admin/users/${id}`);
+    } catch (e: any) {
+      return thunkApi.rejectWithValue(
+        e.message || 'An error occurred while deleting user, try again later.'
       );
     }
   }
@@ -101,6 +116,27 @@ export const updateUser = createAsyncThunk(
       return data;
     } catch (e: any) {
       return thunkApi.rejectWithValue(getUserUpdateErrorMessage(e.status));
+    }
+  }
+);
+
+export const updateUserRoles = createAsyncThunk(
+  'usersAdmin/updateUserRoles',
+
+  async ({ requestData, id }: UpdateUserRoles, thunkApi) => {
+    try {
+      const resp = await api.post<UserRolesRequest, AxiosResponse<UserProfile>>(
+        `/admin/users/${id}/rights`,
+        { roles: requestData }
+      );
+      const data = resp.data;
+
+      return data;
+    } catch (e: any) {
+      return thunkApi.rejectWithValue(
+        e.message ||
+          'An error occurred while updating user roles, try again later.'
+      );
     }
   }
 );

@@ -1,10 +1,16 @@
 // Интерфейс запроса для фильтрации и сортировки пользователей
 export interface UserFilters {
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder?: 'asc' | 'desc';
   limit: number; // сколько на странице
   offset: number; // страницу
+  sortBy?: string;
   search?: string;
+  isBlocked?: boolean;
+}
+
+export interface UserFiltersByField {
+  sortOrder?: 'asc' | 'desc';
+  sortBy?: string;
   isBlocked?: boolean;
 }
 
@@ -51,8 +57,19 @@ export interface UpdateUserParams {
   id?: string;
 }
 
+export interface UpdateUserRoles {
+  requestData: UserRoles[];
+  id?: string;
+}
+
 export enum UserRoles {
   ADMIN = 'ADMIN',
   MODERATOR = 'MODERATOR',
   USER = 'USER',
+}
+
+export enum UsersSwitcherValues {
+  ALL = 'Все',
+  BLOCKED = 'Заблокированные',
+  ACTIVE = 'Активные',
 }

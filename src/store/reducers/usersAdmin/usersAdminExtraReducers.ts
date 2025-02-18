@@ -6,6 +6,7 @@ import {
   blockUser,
   unblockUser,
   updateUser,
+  deleteUser,
 } from './usersAdminAsyncThunk';
 import { UsersAdminState } from './usersAdminSlice';
 
@@ -69,6 +70,16 @@ export function extraReducers(
     state.users[index] = payload;
   });
   builder.addCase(unblockUser.rejected, (state) => {
+    state.status = LoadingStatus.FAIL;
+  });
+
+  builder.addCase(deleteUser.pending, (state) => {
+    state.status = LoadingStatus.LOADING;
+  });
+  builder.addCase(deleteUser.fulfilled, (state) => {
+    state.status = LoadingStatus.SUCCESS;
+  });
+  builder.addCase(deleteUser.rejected, (state) => {
     state.status = LoadingStatus.FAIL;
   });
 }
