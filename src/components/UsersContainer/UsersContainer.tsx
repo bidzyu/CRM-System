@@ -1,5 +1,5 @@
 import { Flex } from 'antd';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { fetchUsers } from '../../store/reducers/usersAdmin/usersAdminAsyncThunk';
 import { setDefaultAdminState } from '../../store/reducers/usersAdmin/usersAdminSlice';
 import { getSearchParams } from '../../store/selectors/usersAdmin';
@@ -8,10 +8,8 @@ import SearchPanel from './SearchPanel/SearchPanel';
 import UsersPanel from './UsersPanel/UsersPanel';
 
 const UsersContainer = () => {
-  const { users, totalAmount, status } = useAppSelector(
-    (state) => state.usersAdmin
-  );
-  const { search, sortBy, sortOrder, limit, offset } =
+  const { totalAmount } = useAppSelector((state) => state.usersAdmin);
+  const { search, sortBy, sortOrder, limit, offset, isBlocked } =
     useAppSelector(getSearchParams);
 
   const page = offset + 1;
@@ -20,7 +18,7 @@ const UsersContainer = () => {
 
   useEffect(() => {
     dispatch(fetchUsers());
-  }, [search, sortBy, sortOrder, limit, offset]);
+  }, [search, sortBy, sortOrder, limit, offset, isBlocked]);
 
   useEffect(() => {
     return () => {
@@ -33,20 +31,14 @@ const UsersContainer = () => {
       vertical
       style={{
         padding: 25,
-        maxWidth: 1400,
+        maxWidth: 1480,
         margin: '20px auto 0',
         borderRadius: 8,
         border: '1px solid #ddd',
       }}
     >
       <SearchPanel />
-      <UsersPanel
-        users={users}
-        page={page}
-        totalItems={totalAmount}
-        pageSize={limit}
-        status={status}
-      />
+      <UsersPanel page={page} totalItems={totalAmount} pageSize={limit} />
     </Flex>
   );
 };

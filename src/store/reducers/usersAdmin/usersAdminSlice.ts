@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
-import type { UserProfile, UserFilters } from '../../../interfaces/userRoles';
+import {
+  UserProfile,
+  UserFilters,
+  UserFiltersByField,
+  UsersSwitcherValues,
+} from '../../../interfaces/userRoles';
 import { extraReducers } from './usersAdminExtraReducers';
 
 export interface UsersAdminState {
@@ -14,8 +19,7 @@ export interface UsersAdminState {
 
 const defaultSearchParams: UserFilters = {
   search: '',
-  sortBy: '',
-  sortOrder: 'asc',
+  // sortOrder: 'asc',
   limit: 20,
   offset: 0,
 };
@@ -34,6 +38,7 @@ const usersAdminSlice = createSlice({
   reducers: {
     setUsersSearchTerm: (state, { payload }: PayloadAction<string>) => {
       state.searchParams.search = payload;
+      state.searchParams.offset = 0;
     },
     changeUsersPage: (state, { payload }: PayloadAction<number>) => {
       state.searchParams.offset = payload;
@@ -48,12 +53,35 @@ const usersAdminSlice = createSlice({
     setDefaultSearchParams: (state) => {
       state.searchParams = defaultSearchParams;
     },
-    changeUsersSort: (state, { payload }) => {
-      state.searchParams.sortBy = payload.sortBy;
-      state.searchParams.sortOrder = payload.sortOrder;
+    changeUsersSort: (
+      state,
+      { payload }: PayloadAction<UserFiltersByField>
+    ) => {
+      const newSearchParams = {
+        ...defaultSearchParams,
+        search: state.searchParams.search,
+        isBlocked: state.searchParams.isBlocked,
+        ...payload,
+      };
+
+      state.searchParams = newSearchParams;
     },
     clearCurrUserState: (state) => {
       state.currUser = null;
+    },
+    changeIsBlockedFilter: (
+      state,
+      { payload }: PayloadAction<UsersSwitcherValues>
+    ) => {
+      if (payload === UsersSwitcherValues.ALL) {
+        delete state.searchParams.isBlocked;
+      }
+      if (payload === UsersSwitcherValues.ACTIVE) {
+        state.searchParams.isBlocked = false;
+      }
+      if (payload === UsersSwitcherValues.BLOCKED) {
+        state.searchParams.isBlocked = true;
+      }
     },
   },
   extraReducers,
@@ -67,4 +95,5 @@ export const {
   setDefaultSearchParams,
   changeUsersSort,
   clearCurrUserState,
+  changeIsBlockedFilter,
 } = usersAdminSlice.actions;

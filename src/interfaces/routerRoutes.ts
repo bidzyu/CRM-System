@@ -5,5 +5,4 @@ export enum RouterRoutes {
   PROFILE = '/profile',
   TODOS = '/todos',
   USERS = '/users',
-  USERDETAILS = '/users/',
 }

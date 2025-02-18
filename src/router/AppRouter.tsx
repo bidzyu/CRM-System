@@ -7,13 +7,15 @@ import { Route, Routes } from 'react-router-dom';
 import { RouterRoutes } from '../interfaces/routerRoutes';
 import React, { Suspense } from 'react';
 import ReconnectSpin from '../components/ReconnectSpin/ReconnectSpin';
-import UserDetails from '../components/UserDetails/UserDetails';
 
 const ProfilePage = React.lazy(
   () => import('../pages/ProfilePage/ProfilePage')
 );
 const TodoPage = React.lazy(() => import('../pages/TodoPage/TodoPage'));
 const UsersPage = React.lazy(() => import('../pages/UsersPage/UsersPage'));
+const UserDetails = React.lazy(
+  () => import('../components/UserDetails/UserDetails')
+);
 
 const AppRouter = () => (
   <Routes>
@@ -25,16 +27,17 @@ const AppRouter = () => (
             <UsersPage />
           </Suspense>
         }
-      />
-      <Route
-        path={RouterRoutes.USERDETAILS + ':id'}
-        element={
-          <Suspense fallback={<ReconnectSpin />}>
-            <UsersPage />
-            <UserDetails />
-          </Suspense>
-        }
-      />
+      >
+        <Route
+          path={RouterRoutes.USERS + '/:id'}
+          element={
+            <Suspense fallback={<ReconnectSpin />}>
+              <UserDetails />
+            </Suspense>
+          }
+        />
+      </Route>
+
       <Route
         path={RouterRoutes.PROFILE}
         element={
