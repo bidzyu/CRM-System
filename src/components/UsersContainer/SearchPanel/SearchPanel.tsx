@@ -1,6 +1,6 @@
 import { Button, Flex, Form, Input, Typography } from 'antd';
-import { setUsersSearchTerm } from '../../../store/reducers/usersAdmin/usersAdminSlice';
 import { useAppDispatch } from '../../../store/store';
+import { setUsersSearchTerm } from '../../../store/reducers/usersAdmin/usersAdminSlice';
 
 const SearchPanel = () => {
   const dispatch = useAppDispatch();

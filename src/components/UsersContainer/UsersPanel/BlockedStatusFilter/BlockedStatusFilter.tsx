@@ -1,7 +1,7 @@
 import { Segmented } from 'antd';
-import { UsersSwitcherValues } from '../../../../interfaces/userRoles';
-import { changeIsBlockedFilter } from '../../../../store/reducers/usersAdmin/usersAdminSlice';
 import { useAppDispatch, useAppSelector } from '../../../../store/store';
+import { changeIsBlockedFilter } from '../../../../store/reducers/usersAdmin/usersAdminSlice';
+import { UsersSwitcherValues } from '../../../../interfaces/userRoles';
 
 const usersSwitcherValues = Object.values(UsersSwitcherValues);
 

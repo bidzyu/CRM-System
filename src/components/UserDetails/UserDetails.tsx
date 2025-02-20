@@ -1,4 +1,5 @@
 import { Modal } from 'antd';
+import ProfileInfo from '../ProfileContainer/ProfileInfo/ProfileInfo';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RouterRoutes } from '../../interfaces/routerRoutes';
@@ -9,7 +10,6 @@ import {
 } from '../../store/reducers/usersAdmin/usersAdminAsyncThunk';
 import { clearCurrUserState } from '../../store/reducers/usersAdmin/usersAdminSlice';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import ProfileInfo from '../ProfileContainer/ProfileInfo/ProfileInfo';
 
 const UserDetails = () => {
   const currUserProfile = useAppSelector((state) => state.usersAdmin.currUser);
@@ -17,10 +17,6 @@ const UserDetails = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-
-  console.log(currUserProfile);
-
-  const handleOk = () => {};
 
   const handleCancel = () => {
     navigate(RouterRoutes.USERS);
@@ -37,13 +33,7 @@ const UserDetails = () => {
   }, []);
 
   return (
-    <Modal
-      title={`ID:${id}`}
-      open={true}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      footer={null}
-    >
+    <Modal title={`ID:${id}`} open={true} onCancel={handleCancel} footer={null}>
       {currUserProfile && (
         <ProfileInfo
           user={currUserProfile}

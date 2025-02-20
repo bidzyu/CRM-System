@@ -14,9 +14,11 @@ export const fetchTodos = createAsyncThunk(
   'todos/fetchTodos',
   async (filter: TodoFilterStatus, thunkApi) => {
     try {
-      const response = await api.get<MetaResponse<Todo, TodoInfo>>(
-        `/todos?filter=${filter}`
-      );
+      const response = await api.get<MetaResponse<Todo, TodoInfo>>(`/todos`, {
+        params: {
+          filter,
+        },
+      });
 
       return response.data;
     } catch (e: any) {

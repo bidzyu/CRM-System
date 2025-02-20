@@ -1,5 +1,3 @@
-import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { LoadingStatus } from '../../../interfaces/loadingStatus';
 import {
   fetchUser,
   fetchUsers,
@@ -8,6 +6,8 @@ import {
   updateUser,
   deleteUser,
 } from './usersAdminAsyncThunk';
+import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { LoadingStatus } from '../../../interfaces/loadingStatus';
 import { UsersAdminState } from './usersAdminSlice';
 
 export function extraReducers(

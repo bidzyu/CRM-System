@@ -1,19 +1,11 @@
-import { Table } from 'antd';
+import { App as AntdApp, Button, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../../../store/store';
 import {
   useModalWarning,
   ModalWarning,
 } from '../../../../hooks/useModalWarning';
-import { LoadingStatus } from '../../../../interfaces/loadingStatus';
-import {
-  UserFiltersByField,
-  UserProfile,
-  UserRoles,
-} from '../../../../interfaces/userRoles';
 import { changeUsersSort } from '../../../../store/reducers/usersAdmin/usersAdminSlice';
-import { useAppDispatch, useAppSelector } from '../../../../store/store';
-import { App as AntdApp, Button } from 'antd';
-
 import {
   blockUser,
   deleteUser,
@@ -21,9 +13,15 @@ import {
   unblockUser,
   updateUserRoles,
 } from '../../../../store/reducers/usersAdmin/usersAdminAsyncThunk';
-import { RouterRoutes } from '../../../../interfaces/routerRoutes';
-import { getUserRolesByRole } from '../../../../helpers/getCurrUserRole';
+import { getUserRolesByRole } from '../../../../helpers/getUserRole';
 import { getUsersTableColumns } from '../../../../helpers/getUsersTableColumns';
+import { LoadingStatus } from '../../../../interfaces/loadingStatus';
+import {
+  UserFiltersByField,
+  UserProfile,
+  UserRoles,
+} from '../../../../interfaces/userRoles';
+import { RouterRoutes } from '../../../../interfaces/routerRoutes';
 
 const UsersTable = () => {
   const users = useAppSelector((state) => state.usersAdmin.users);
@@ -39,9 +37,8 @@ const UsersTable = () => {
 
   const handleTableChange = (_: any, __: any, sorter: any) => {
     const { order, field } = sorter;
-    const newParams: UserFiltersByField = {
-      // sortOrder: 'asc',
-    };
+    const newParams: UserFiltersByField = {};
+
     if (order && field) {
       newParams.sortBy = field;
 

@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
 import { api } from '../../../api/AppApi';
 import { getUserUpdateErrorMessage } from '../../../helpers/getErrorMessage';
-import { getSearchParamsByObj } from '../../../helpers/getSearchParamsByObj';
+import { AxiosResponse } from 'axios';
+import { RootState } from '../../store';
 import type {
   MetaResponse,
   UserProfile,
@@ -11,7 +11,7 @@ import type {
   UserRolesRequest,
   UpdateUserRoles,
 } from '../../../interfaces/userRoles';
-import { RootState } from '../../store';
+
 
 export const fetchUsers = createAsyncThunk(
   'usersAdmin/fetchUsers',
@@ -19,12 +19,10 @@ export const fetchUsers = createAsyncThunk(
     const state = thunkApi.getState() as RootState;
     const stateSearchParams = state.usersAdmin.searchParams;
 
-    const searchParams = getSearchParamsByObj(stateSearchParams);
-
     try {
-      const resp = await api.get<MetaResponse<UserProfile>>(
-        '/admin/users' + searchParams
-      );
+      const resp = await api.get<MetaResponse<UserProfile>>('/admin/users', {
+        params: { ...stateSearchParams },
+      });
       const data = resp.data;
 
       return data;
