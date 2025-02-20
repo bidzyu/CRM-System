@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { LoadingStatus } from '../../../interfaces/loadingStatus';
 import {
   UserProfile,
   UserFilters,
@@ -7,11 +6,11 @@ import {
   UsersSwitcherValues,
 } from '../../../interfaces/userRoles';
 import { extraReducers } from './usersAdminExtraReducers';
+import { LoadingStatus } from '../../../interfaces/loadingStatus';
 
 export interface UsersAdminState {
   users: UserProfile[];
   totalAmount: number;
-  // sortBy: 'email' | 'username' | 'id';
   searchParams: UserFilters;
   currUser: UserProfile | null;
   status: LoadingStatus;
@@ -19,7 +18,6 @@ export interface UsersAdminState {
 
 const defaultSearchParams: UserFilters = {
   search: '',
-  // sortOrder: 'asc',
   limit: 20,
   offset: 0,
 };

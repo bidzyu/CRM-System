@@ -1,8 +1,8 @@
 import { Flex, Pagination } from 'antd';
-import { changeUsersPage } from '../../../store/reducers/usersAdmin/usersAdminSlice';
-import { useAppDispatch } from '../../../store/store';
 import BlockedStatusFilter from './BlockedStatusFilter/BlockedStatusFilter';
 import UsersTable from './UsersTable/UsersTable';
+import { useAppDispatch } from '../../../store/store';
+import { changeUsersPage } from '../../../store/reducers/usersAdmin/usersAdminSlice';
 
 interface UsersPanelProps {
   page: number;

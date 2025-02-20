@@ -1,5 +1,5 @@
-import { UserOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { UserRoles } from '../interfaces/userRoles';
 
 export const getRolesDropdownItems = (

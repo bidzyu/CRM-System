@@ -1,14 +1,14 @@
 import { Flex } from 'antd';
+import SearchPanel from './SearchPanel/SearchPanel';
+import UsersPanel from './UsersPanel/UsersPanel';
 import { useEffect } from 'react';
 import { fetchUsers } from '../../store/reducers/usersAdmin/usersAdminAsyncThunk';
 import { setDefaultAdminState } from '../../store/reducers/usersAdmin/usersAdminSlice';
 import { getSearchParams } from '../../store/selectors/usersAdmin';
 import { useAppDispatch, useAppSelector } from '../../store/store';
-import SearchPanel from './SearchPanel/SearchPanel';
-import UsersPanel from './UsersPanel/UsersPanel';
 
 const UsersContainer = () => {
-  const { totalAmount } = useAppSelector((state) => state.usersAdmin);
+  const totalAmount = useAppSelector((state) => state.usersAdmin.totalAmount);
   const { search, sortBy, sortOrder, limit, offset, isBlocked } =
     useAppSelector(getSearchParams);
 

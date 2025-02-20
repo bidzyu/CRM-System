@@ -1,9 +1,9 @@
-import { ArrowRightOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Flex, Popover, Tag } from 'antd';
-import { UserProfile, UserRoles } from '../interfaces/userRoles';
-import type { TableColumnsType } from 'antd';
+import { ArrowRightOutlined, UserDeleteOutlined } from '@ant-design/icons';
 import { getRolesDropdownItems } from './getRolesDropdownItems';
-import { getCurrUserRole } from './getCurrUserRole';
+import { getCurrUserRole } from './getUserRole';
+import type { TableColumnsType } from 'antd';
+import { UserProfile, UserRoles } from '../interfaces/userRoles';
 
 export const getUsersTableColumns = (
   renderBlockBtnFn: (_: any, props: any) => any,
@@ -14,7 +14,6 @@ export const getUsersTableColumns = (
     currRole: UserRoles,
     newRole: UserRoles
   ) => any
-  // rolesItems: MenuProps['items']
 ): TableColumnsType<UserProfile> => [
   {
     title: 'Имя',
