@@ -54,8 +54,6 @@ export function extraReducers(
   });
   builder.addCase(blockUser.fulfilled, (state, { payload }) => {
     state.status = LoadingStatus.SUCCESS;
-    const index = state.users.findIndex((user) => user.id === payload.id);
-    state.users[index] = payload;
   });
   builder.addCase(blockUser.rejected, (state) => {
     state.status = LoadingStatus.FAIL;
@@ -66,8 +64,6 @@ export function extraReducers(
   });
   builder.addCase(unblockUser.fulfilled, (state, { payload }) => {
     state.status = LoadingStatus.SUCCESS;
-    const index = state.users.findIndex((user) => user.id === payload.id);
-    state.users[index] = payload;
   });
   builder.addCase(unblockUser.rejected, (state) => {
     state.status = LoadingStatus.FAIL;

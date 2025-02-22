@@ -1,10 +1,10 @@
 import { UserRoles } from '../interfaces/userRoles';
 
 export const getCurrUserRole = (roles: UserRoles[]) => {
-  if (roles.includes(UserRoles.ADMIN)) {
+  if (roles && roles.includes(UserRoles.ADMIN)) {
     return UserRoles.ADMIN;
   }
-  if (roles.includes(UserRoles.MODERATOR)) {
+  if (roles && roles.includes(UserRoles.MODERATOR)) {
     return UserRoles.MODERATOR;
   }
   return UserRoles.USER;
