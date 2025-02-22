@@ -55,8 +55,13 @@ const UsersTable = () => {
   const renderBtnFn = (_: any, { id, isBlocked }: any) => {
     const toggleBlockUser = isBlocked ? unblockUser : blockUser;
 
+    const handleToggleBlockUser = async () => {
+      await dispatch(toggleBlockUser(id));
+      await dispatch(fetchUsers());
+    };
+
     return (
-      <Button onClick={() => dispatch(toggleBlockUser(id))}>
+      <Button onClick={handleToggleBlockUser}>
         {isBlocked ? 'Разблокировать' : 'Заблокировать'}
       </Button>
     );
