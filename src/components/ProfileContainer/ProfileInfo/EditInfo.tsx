@@ -3,7 +3,6 @@ import EditButtons from './EditButtons';
 import MyError from '../../AuthForms/MyAuthFormItems/MyError';
 
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../../store/store';
 
 import {
   emailRules,
@@ -20,10 +19,7 @@ import {
   RegisterConfirmInputNames,
   UserFieldType,
 } from '../../../interfaces/authForms';
-import type {
-  UpdateUserParams,
-  UserProfile,
-} from '../../../interfaces/userRoles';
+import type { UpdateUserParams } from '../../../interfaces/userRoles';
 import { ProfileInfoProps } from './ProfileInfo';
 
 interface EditInfoProps extends ProfileInfoProps {
@@ -38,8 +34,6 @@ const EditInfo: React.FC<EditInfoProps> = ({
   profileUpdater,
   dataUpdater,
 }) => {
-  const dispatch = useAppDispatch();
-
   const [error, setError] = useState('');
   const [form] = Form.useForm();
 
@@ -74,14 +68,16 @@ const EditInfo: React.FC<EditInfoProps> = ({
       };
 
       try {
-        await dispatch(profileUpdater(updatedParams)).unwrap();
+        await profileUpdater(updatedParams).unwrap();
         if (dataUpdater) {
-          await dispatch(dataUpdater());
+          await dataUpdater();
         }
       } catch (e: any) {
         setError(e);
       } finally {
-        form.resetFields();
+        if (dataUpdater) {
+          form.resetFields();
+        }
       }
     }
   };

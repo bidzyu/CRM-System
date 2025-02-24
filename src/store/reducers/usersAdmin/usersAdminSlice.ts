@@ -5,15 +5,11 @@ import {
   UserFiltersByField,
   UsersSwitcherValues,
 } from '../../../interfaces/userRoles';
-import { extraReducers } from './usersAdminExtraReducers';
-import { LoadingStatus } from '../../../interfaces/loadingStatus';
 
 export interface UsersAdminState {
   users: UserProfile[];
   totalAmount: number;
   searchParams: UserFilters;
-  currUser: UserProfile | null;
-  status: LoadingStatus;
 }
 
 const defaultSearchParams: UserFilters = {
@@ -26,8 +22,6 @@ const initialState: UsersAdminState = {
   users: [],
   totalAmount: 0,
   searchParams: defaultSearchParams,
-  currUser: null,
-  status: LoadingStatus.INITIAL,
 };
 
 const usersAdminSlice = createSlice({
@@ -42,9 +36,7 @@ const usersAdminSlice = createSlice({
       state.searchParams.offset = payload;
     },
     setDefaultAdminState: (state) => {
-      state.currUser = null;
       state.searchParams = defaultSearchParams;
-      state.status = initialState.status;
       state.totalAmount = initialState.totalAmount;
       state.users = [];
     },
@@ -64,9 +56,6 @@ const usersAdminSlice = createSlice({
 
       state.searchParams = newSearchParams;
     },
-    clearCurrUserState: (state) => {
-      state.currUser = null;
-    },
     changeIsBlockedFilter: (
       state,
       { payload }: PayloadAction<UsersSwitcherValues>
@@ -82,7 +71,6 @@ const usersAdminSlice = createSlice({
       }
     },
   },
-  extraReducers,
 });
 
 export default usersAdminSlice.reducer;
@@ -92,6 +80,5 @@ export const {
   setDefaultAdminState,
   setDefaultSearchParams,
   changeUsersSort,
-  clearCurrUserState,
   changeIsBlockedFilter,
 } = usersAdminSlice.actions;
