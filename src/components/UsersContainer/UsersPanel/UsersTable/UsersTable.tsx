@@ -6,26 +6,35 @@ import {
   ModalWarning,
 } from '../../../../hooks/useModalWarning';
 import { changeUsersSort } from '../../../../store/reducers/usersAdmin/usersAdminSlice';
-import {
-  blockUser,
-  deleteUser,
-  fetchUsers,
-  unblockUser,
-  updateUserRoles,
-} from '../../../../store/reducers/usersAdmin/usersAdminAsyncThunk';
 import { getUserRolesByRole } from '../../../../helpers/getUserRole';
 import { getUsersTableColumns } from '../../../../helpers/getUsersTableColumns';
-import { LoadingStatus } from '../../../../interfaces/loadingStatus';
 import {
   UserFiltersByField,
   UserProfile,
   UserRoles,
 } from '../../../../interfaces/userRoles';
 import { RouterRoutes } from '../../../../interfaces/routerRoutes';
+import {
+  useGetUsersQuery,
+  useBlockUserMutation,
+  useUnblockUserMutation,
+  useDeleteUserMutation,
+  useUpdateUserRolesMutation,
+} from '../../../../api/UsersApi';
+import { useEffect } from 'react';
 
 const UsersTable = () => {
-  const users = useAppSelector((state) => state.usersAdmin.users);
-  const status = useAppSelector((state) => state.usersAdmin.status);
+  const params = useAppSelector((state) => state.usersAdmin.searchParams);
+  const { search, sortBy, sortOrder, limit, offset, isBlocked } = params;
+  const [blockUser] = useBlockUserMutation();
+  const [unblockUser] = useUnblockUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const [updateUserRoles] = useUpdateUserRolesMutation();
+
+  const { data, isLoading, refetch } = useGetUsersQuery({
+    params,
+  });
+  const users = (data && data.data) || [];
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -33,7 +42,9 @@ const UsersTable = () => {
 
   const { message } = AntdApp.useApp();
 
-  const isLoading = status === LoadingStatus.LOADING;
+  useEffect(() => {
+    refetch();
+  }, [search, sortBy, sortOrder, limit, offset, isBlocked]);
 
   const handleTableChange = (_: any, __: any, sorter: any) => {
     const { order, field } = sorter;
@@ -53,11 +64,12 @@ const UsersTable = () => {
   };
 
   const renderBtnFn = (_: any, { id, isBlocked }: any) => {
-    const toggleBlockUser = isBlocked ? unblockUser : blockUser;
-
-    const handleToggleBlockUser = async () => {
-      await dispatch(toggleBlockUser(id));
-      await dispatch(fetchUsers());
+    const handleToggleBlockUser = () => {
+      if (isBlocked) {
+        unblockUser({ id });
+      } else {
+        blockUser({ id });
+      }
     };
 
     return (
@@ -77,9 +89,8 @@ const UsersTable = () => {
       content: 'Это действие невозможно будет отменить!',
       onOk: async () => {
         try {
-          await dispatch(deleteUser(id)).unwrap();
+          await deleteUser({ id }).unwrap();
           message.success(`Пользователь с id: ${id} был успешно удален!`);
-          await dispatch(fetchUsers()).unwrap();
         } catch (e) {
           message.error(
             'Упс, произошла ошибка, пожалуйста повторите запрос позже.'
@@ -102,12 +113,10 @@ const UsersTable = () => {
       onOk: async () => {
         try {
           const requestData = getUserRolesByRole(newRole);
-
-          await dispatch(updateUserRoles({ requestData, id })).unwrap();
+          await updateUserRoles({ requestData, id }).unwrap();
           message.success(
             `Права пользователя id: ${id} были успешно обновлены на ${newRole}!`
           );
-          await dispatch(fetchUsers()).unwrap();
         } catch (e) {
           message.error(
             'Упс, произошла ошибка, пожалуйста повторите запрос позже.'

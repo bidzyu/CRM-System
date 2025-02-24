@@ -62,6 +62,10 @@ export interface UpdateUserRoles {
   id?: string;
 }
 
+export interface QueryUserId {
+  id: string;
+}
+
 export enum UserRoles {
   ADMIN = 'ADMIN',
   MODERATOR = 'MODERATOR',
