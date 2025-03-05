@@ -4,8 +4,8 @@ import { AuthLabels } from '../interfaces/authForms';
 const notLatRegEx = /[^a-z]+/i;
 const notCyrRegEx = /[^а-я]+/i;
 const validPhoneRegEx =
-  /^[+]?[0-9]{1,2}[-\s.]?[(]?[0-9]{3}[)]?[\s.]?[0-9]{3}[-\s.]?[0-9]{2}[-\s.]?[0-9]{2}$/;
-const validPhone2RegEx = /^\+?\d{9,12}$/;
+  /^\+[0-9]{1,2}[-\s.]?[(]?[0-9]{3}[)]?[\s.]?[0-9]{3}[-\s.]?[0-9]{2}[-\s.]?[0-9]{2}$/;
+const validPhone2RegEx = /^\+\d{9,12}$/;
 
 export const loginRules = [
   { required: true, message: '' },

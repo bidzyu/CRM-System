@@ -4,4 +4,5 @@ export enum RouterRoutes {
   FORGOTPASSWORD = '/auth/forgot',
   PROFILE = '/profile',
   TODOS = '/todos',
+  USERS = '/users',
 }

@@ -2,8 +2,7 @@ import { Form, Input, Flex } from 'antd';
 import EditButtons from './EditButtons';
 import MyError from '../../AuthForms/MyAuthFormItems/MyError';
 
-import { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../store/store';
+import { useEffect, useState } from 'react';
 
 import {
   emailRules,
@@ -14,27 +13,33 @@ import {
   getUpdatedUserFields,
   shouldUserUpdate,
 } from '../../../helpers/updateUser';
-import { getUserProfile } from '../../../store/selectors/userProfile';
 
 import {
   AuthLabels,
   RegisterConfirmInputNames,
   UserFieldType,
 } from '../../../interfaces/authForms';
-import { Profile } from '../../../interfaces/authApi';
-import { updateUserProfile } from '../../../store/reducers/userProfile/userProfileAsyncThunk';
+import type { UpdateUserParams } from '../../../interfaces/userRoles';
+import { ProfileInfoProps } from './ProfileInfo';
 
-interface EditInfoProps {
+interface EditInfoProps extends ProfileInfoProps {
   isEdit: boolean;
   toggleEdit: () => void;
 }
 
-const EditInfo: React.FC<EditInfoProps> = ({ isEdit, toggleEdit }) => {
-  const user = useAppSelector(getUserProfile) as Profile;
-  const dispatch = useAppDispatch();
-
+const EditInfo: React.FC<EditInfoProps> = ({
+  isEdit,
+  toggleEdit,
+  user,
+  profileUpdater,
+  dataUpdater,
+}) => {
   const [error, setError] = useState('');
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.resetFields();
+  }, [user]);
 
   const handleRemoveError = () => {
     if (error) {
@@ -57,13 +62,22 @@ const EditInfo: React.FC<EditInfoProps> = ({ isEdit, toggleEdit }) => {
 
     if (shouldUserUpdate(user, event)) {
       const updatedProfile = getUpdatedUserFields(user, event);
+      const updatedParams: UpdateUserParams = {
+        requestData: updatedProfile,
+        id: String(user.id),
+      };
 
       try {
-        await dispatch(updateUserProfile(updatedProfile)).unwrap();
+        await profileUpdater(updatedParams).unwrap();
+        if (dataUpdater) {
+          await dataUpdater();
+        }
       } catch (e: any) {
         setError(e);
       } finally {
-        form.resetFields();
+        if (dataUpdater) {
+          form.resetFields();
+        }
       }
     }
   };

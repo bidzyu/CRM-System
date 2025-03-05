@@ -5,9 +5,11 @@ import {
   resetUserPassword,
 } from './userProfileAsyncThunk';
 import { LoadingStatus } from '../../../interfaces/loadingStatus';
-import type { UserProfile } from './userProfileSlice';
+import type { UserProfileState } from './userProfileSlice';
 
-export function extraReducers(builder: ActionReducerMapBuilder<UserProfile>) {
+export function extraReducers(
+  builder: ActionReducerMapBuilder<UserProfileState>
+) {
   builder.addCase(fetchUserProfile.pending, (state) => {
     state.loading = LoadingStatus.LOADING;
   });

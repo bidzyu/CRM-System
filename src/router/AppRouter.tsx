@@ -1,7 +1,5 @@
 import AuthLayout from '../components/AuthLayout/AuthLayout';
 import AppLayout from '../components/AppLayout/AppLayout';
-// import ProfilePage from '../pages/ProfilePage/ProfilePage';
-// import TodoPage from '../pages/TodoPage/TodoPage';
 import LoginForm from '../components/AuthForms/LoginForm';
 import ForgotForm from '../components/AuthForms/ForgotForm';
 import RegisterForm from '../components/AuthForms/RegisterForm';
@@ -14,10 +12,32 @@ const ProfilePage = React.lazy(
   () => import('../pages/ProfilePage/ProfilePage')
 );
 const TodoPage = React.lazy(() => import('../pages/TodoPage/TodoPage'));
+const UsersPage = React.lazy(() => import('../pages/UsersPage/UsersPage'));
+const UserDetailsPage = React.lazy(
+  () => import('../pages/UserDetailsPage/UserDetailsPage')
+);
 
 const AppRouter = () => (
   <Routes>
     <Route path="/" element={<AppLayout />}>
+      <Route
+        path={RouterRoutes.USERS}
+        element={
+          <Suspense fallback={<ReconnectSpin />}>
+            <UsersPage />
+          </Suspense>
+        }
+      >
+        <Route
+          path={RouterRoutes.USERS + '/:id'}
+          element={
+            <Suspense fallback={<ReconnectSpin />}>
+              <UserDetailsPage />
+            </Suspense>
+          }
+        />
+      </Route>
+
       <Route
         path={RouterRoutes.PROFILE}
         element={
@@ -34,6 +54,7 @@ const AppRouter = () => (
           </Suspense>
         }
       />
+
       <Route path="*" element={<div>Not found</div>} />
     </Route>
     <Route path={RouterRoutes.AUTHORIZATION} element={<AuthLayout />}>

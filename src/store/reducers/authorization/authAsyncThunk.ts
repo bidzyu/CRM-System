@@ -9,9 +9,9 @@ import type {
   AuthData,
   RefreshToken,
   Token,
-  Profile,
   UserRegistration,
 } from '../../../interfaces/authApi';
+import type { UserProfile } from '../../../interfaces/userRoles';
 import { AxiosResponse } from 'axios';
 
 export const loginUser = createAsyncThunk(
@@ -70,7 +70,7 @@ export const registerUser = createAsyncThunk(
   'registration/registerUser',
   async (userData: UserRegistration, thunkApi) => {
     try {
-      await noInterceptApi.post<UserRegistration, Profile>(
+      await noInterceptApi.post<UserRegistration, UserProfile>(
         '/auth/signup',
         userData
       );
