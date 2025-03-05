@@ -13,8 +13,8 @@ const ProfilePage = React.lazy(
 );
 const TodoPage = React.lazy(() => import('../pages/TodoPage/TodoPage'));
 const UsersPage = React.lazy(() => import('../pages/UsersPage/UsersPage'));
-const UserDetails = React.lazy(
-  () => import('../components/UserDetails/UserDetails')
+const UserDetailsPage = React.lazy(
+  () => import('../pages/UserDetailsPage/UserDetailsPage')
 );
 
 const AppRouter = () => (
@@ -32,7 +32,7 @@ const AppRouter = () => (
           path={RouterRoutes.USERS + '/:id'}
           element={
             <Suspense fallback={<ReconnectSpin />}>
-              <UserDetails />
+              <UserDetailsPage />
             </Suspense>
           }
         />

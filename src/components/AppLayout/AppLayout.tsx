@@ -38,8 +38,6 @@ const AppLayout: React.FC = () => {
     return <Navigate to={RouterRoutes.TODOS} replace />;
   }
 
-  console.log(123);
-
   const isAdmin = profile.roles.includes(UserRoles.ADMIN);
 
   return (

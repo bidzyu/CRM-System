@@ -1,11 +1,13 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import UsersContainer from '../../components/UsersContainer/UsersContainer';
 
 const UsersPage: React.FC = () => {
+  const { id } = useParams();
+
   return (
     <div style={{ padding: 20 }}>
-      <UsersContainer />
-      <Outlet />
+      <UsersContainer display={id ? 'none' : undefined} />
+      {id && <Outlet />}
     </div>
   );
 };

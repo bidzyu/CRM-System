@@ -5,7 +5,11 @@ import { useEffect } from 'react';
 import { setDefaultAdminState } from '../../store/reducers/usersAdmin/usersAdminSlice';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 
-const UsersContainer = () => {
+interface UsersContainerProps {
+  display: string | undefined;
+}
+
+const UsersContainer: React.FC<UsersContainerProps> = ({ display }) => {
   const totalAmount = useAppSelector((state) => state.usersAdmin.totalAmount);
   const offset = useAppSelector(
     (state) => state.usersAdmin.searchParams.offset
@@ -31,6 +35,7 @@ const UsersContainer = () => {
         margin: '20px auto 0',
         borderRadius: 8,
         border: '1px solid #ddd',
+        display,
       }}
     >
       <SearchPanel />
